@@ -14,7 +14,7 @@ export function setupEnv() {
   Object.assign(process.env, {
     CONFIG_PATH: p, STRIPE_SECRET_KEY: 'sk_test_x', CJ_API_KEY: 'cj_x', CJ_MIN_INTERVAL_MS: '0',
     RESEND_API_KEY: 're_x', EMAIL_FROM: 'Lisso <hola@lisso.shop>', OPS_EMAIL: 'ops@example.com',
-    SITE_URL: 'https://demo.github.io/lisso', GITHUB_STEP_SUMMARY: path.join(dir, 'summary.md')
+    SITE_URL: 'https://demo.github.io/lisso', GITHUB_STEP_SUMMARY: path.join(dir, 'summary.md'), STOCK_PATH: path.join(dir, 'stock.json')
   });
   delete process.env.GITHUB_TOKEN;
   return { dir, cfgPath: p };

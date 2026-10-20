@@ -31,6 +31,8 @@ test('stock: marca colores agotados/bajos en stock.json', async () => {
   assert.deepEqual(result.variants.niebla, { available: true, low: false });
   assert.deepEqual(result.variants.arena, { available: true, low: true });
   assert.equal(result.variants.grafito.available, false, 'stock solo en China no cuenta');
+  const real = JSON.parse(fs.readFileSync(new URL('../site/data/stock.json', import.meta.url)));
+  assert.deepEqual(real.variants, {}, 'el test no toca el stock.json real');
 });
 
 test('setup Stripe: crea 9 payment links con metadatos y redirección a gracias.html', async () => {

@@ -11,7 +11,7 @@ import { requireEnv, log, summary } from './lib/util.mjs';
 requireEnv('CJ_API_KEY');
 const cfg = loadConfig();
 const F = cfg.fulfillment;
-const OUT = path.join(ROOT, 'site/data/stock.json');
+const OUT = process.env.STOCK_PATH || path.join(ROOT, 'site/data/stock.json');
 const USD_EUR = Number(process.env.USD_EUR || 0.92);
 
 export async function run() {
