@@ -16,7 +16,7 @@ const products = await listAll('/v1/products', { active: true });
 let product = products.find(p => p.metadata?.lisso === 'product');
 const productParams = { name: cfg.brand.productName, description: 'DIY snowy street night light kit.', metadata: { lisso: 'product' }, images: [`${url}/assets/img/og.png`] };
 product = product
-  ? await stripe('POST', `/v1/products/${product.id}`, { name: productParams.name, description: productParams.description })
+  ? await stripe('POST', `/v1/products/${product.id}`, { name: productParams.name, description: productParams.description, images: productParams.images })
   : await stripe('POST', '/v1/products', productParams);
 log(`Producto: ${product.id}`);
 
