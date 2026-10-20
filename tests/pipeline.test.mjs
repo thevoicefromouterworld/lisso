@@ -99,3 +99,11 @@ test('pago de prueba (Stripe test mode) → pedido CJ sin pagar (payType 3)', as
   const order = Object.values(world.cjOrders).find(o => o.remark?.includes('pi_f6'));
   assert.equal(order.payType, 3);
 });
+
+test('pedido de una variante que ya no existe → se omite sin error', async () => {
+  const s = makeSession({ id: 'g7', color: 'arena' });
+  world.sessions.push(s);
+  const st = await fulfill.run();
+  assert.equal(st.errors, 0);
+  assert.equal(s.payment_intent.metadata.fulfillment_status, 'skipped');
+});

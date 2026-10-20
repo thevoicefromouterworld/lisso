@@ -70,6 +70,11 @@ async function processSession(s) {
   const attempts = Number(m.fulfillment_attempts || 0);
   if (m.fulfillment_status === 'error' && attempts >= MAX_ATTEMPTS) return;
 
+  // Pedidos de un producto/variante que ya no existe en la configuración (p. ej. pruebas antiguas) → omitir
+  if (!cfg.bundles.some(b => b.id === m.pack) || !cfg.variants.some(v => v.id === m.color)) {
+    if (!DRY) await setPIMeta(pi.id, { fulfillment_status: 'skipped', fulfillment_note: `producto no reconocido (${m.pack}/${m.color})` });
+    stats.skipped++; log(`${r}: omitido (producto no reconocido)`); return;
+  }
   // Reembolsado antes de enviar → no tramitar
   const ch = pi.latest_charge;
   if (ch && typeof ch === 'object' && (ch.refunded || ch.amount_refunded > 0 || ch.disputed)) {
