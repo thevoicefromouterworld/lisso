@@ -1,0 +1,21 @@
+name: "Informe diario"
+on:
+  schedule:
+    - cron: '55 6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node scripts/report.mjs
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM: ${{ vars.EMAIL_FROM }}
+          OPS_EMAIL: ${{ vars.OPS_EMAIL }}
+          REPO_PRIVATE: ${{ github.event.repository.private }}

@@ -1,0 +1,136 @@
+{
+  "brand": {
+    "name": "Lisso",
+    "tagline": "Tu jersey favorito, como el primer día.",
+    "productName": "Lisso Quitapelusas Recargable",
+    "supportEmail": "hola@lisso.shop",
+    "siteUrl": "https://thevoicefromouterworld.github.io/lisso",
+    "currency": "EUR",
+    "locale": "es-ES",
+    "legal": {
+      "ownerName": "[NOMBRE O RAZÓN SOCIAL]",
+      "taxId": "[NIF/CIF]",
+      "address": "[DIRECCIÓN FISCAL], Barcelona, España",
+      "registry": ""
+    }
+  },
+  "variants": [
+    {
+      "id": "niebla",
+      "name": "Niebla",
+      "hex": "#ECE8E1",
+      "accent": "#C9C2B6",
+      "cjVid": ""
+    },
+    {
+      "id": "arena",
+      "name": "Arena",
+      "hex": "#E3C9B4",
+      "accent": "#C29A7C",
+      "cjVid": ""
+    },
+    {
+      "id": "grafito",
+      "name": "Grafito",
+      "hex": "#3B3A3C",
+      "accent": "#1F1E20",
+      "cjVid": ""
+    }
+  ],
+  "bundles": [
+    {
+      "id": "pack1",
+      "qty": 1,
+      "label": "1 unidad",
+      "price": 24.95,
+      "compareAt": null,
+      "badge": ""
+    },
+    {
+      "id": "pack2",
+      "qty": 2,
+      "label": "Pack 2",
+      "price": 34.95,
+      "compareAt": 49.9,
+      "badge": "El más elegido",
+      "default": true
+    },
+    {
+      "id": "pack3",
+      "qty": 3,
+      "label": "Pack regalo 3",
+      "price": 44.95,
+      "compareAt": 74.85,
+      "badge": "Mejor precio"
+    }
+  ],
+  "shipping": {
+    "countries": [
+      "ES"
+    ],
+    "label": "Envío gratis · 2-5 días laborables",
+    "minDays": 2,
+    "maxDays": 5,
+    "returnDays": 30
+  },
+  "economics": {
+    "unitCostEUR": 5.0,
+    "shippingCostEUR": {
+      "1": 3.5,
+      "2": 4.5,
+      "3": 5.5
+    },
+    "vatRate": 0.21,
+    "paymentFeePct": 0.015,
+    "paymentFeeFixedEUR": 0.25
+  },
+  "fulfillment": {
+    "provider": "cj",
+    "autoPay": true,
+    "fromCountryCode": "ES",
+    "fallbackFromCountryCodes": [
+      "DE",
+      "FR",
+      "PL"
+    ],
+    "logisticPreference": "cheapest_within_max_days",
+    "maxShippingDays": 7,
+    "orderPrefix": "LS",
+    "cjProductId": "",
+    "lowStockThreshold": 50
+  },
+  "tracking": {
+    "metaPixelId": "",
+    "tiktokPixelId": "",
+    "ga4Id": ""
+  },
+  "reviewsFormUrl": "",
+  "paymentLinks": {},
+  "specs": [
+    [
+      "Cuchillas",
+      "6 cuchillas de acero inoxidable"
+    ],
+    [
+      "Velocidades",
+      "2 velocidades"
+    ],
+    [
+      "Batería",
+      "Recargable por USB-C (cable incluido)"
+    ],
+    [
+      "Autonomía",
+      "Hasta 60 min por carga (aprox.)"
+    ],
+    [
+      "Seguridad",
+      "Rejilla protectora + bloqueo si se abre el cabezal"
+    ],
+    [
+      "Incluye",
+      "Quitapelusas, cable USB-C, cepillo de limpieza, cuchilla de recambio"
+    ]
+  ],
+  "specsNote": "Revisa estas especificaciones contra la ficha del proveedor antes de lanzar."
+}

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lisso · Quitapelusas recargable · Tu ropa como nueva en segundos</title>
+<meta name="description" content="Quitapelusas eléctrico recargable por USB-C. Elimina bolitas de jerséis, abrigos, sofás y mantas en segundos. Envío gratis en España y 30 días de devolución.">
+<meta name="theme-color" content="#F5F0E8">
+<link rel="canonical" href="{{siteUrl}}/">
+<meta property="og:type" content="product">
+<meta property="og:title" content="Lisso · Tu jersey favorito, como el primer día">
+<meta property="og:description" content="Elimina las bolitas de tu ropa en segundos. Envío gratis y 30 días de devolución.">
+<meta property="og:image" content="{{siteUrl}}/assets/img/og.png">
+<meta property="og:url" content="{{siteUrl}}/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css?v={{build}}">
+<script src="config.js?v={{build}}"></script>
+<script type="application/ld+json">{{jsonld}}</script>
+</head>
+<body>
+<a class="skip" href="#comprar">Ir a comprar</a>
+
+<div class="announce" role="note">
+  <div class="announce__track">
+    <span>Envío gratis en toda España</span><span aria-hidden="true">·</span>
+    <span>30 días para probarlo</span><span aria-hidden="true">·</span>
+    <span>Pago seguro con Apple Pay, Google Pay y tarjeta</span>
+  </div>
+</div>
+
+<header class="header">
+  <div class="wrap header__inner">
+    <a href="./" class="logo" aria-label="Lisso, inicio">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 13.5c2.5 2.5 7.5 2.5 10 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Lisso</span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#antes-despues">Resultados</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+    <a href="#comprar" class="btn btn--sm" data-track="header_cta">Comprar</a>
+  </div>
+</header>
+
+<main>
+<!-- HERO / PRODUCTO -->
+<section class="hero" id="comprar">
+  <div class="wrap hero__grid">
+    <div class="gallery">
+      <div class="gallery__stage" id="stage">
+        <div class="gallery__glow" aria-hidden="true"></div>
+        <div class="gallery__device" id="heroDevice" aria-label="Quitapelusas Lisso" role="img"></div>
+        <div class="gallery__chip gallery__chip--a"><b>6</b> cuchillas</div>
+        <div class="gallery__chip gallery__chip--b">USB-C</div>
+        <img class="gallery__photo" id="heroPhoto" alt="" hidden>
+      </div>
+      <div class="gallery__thumbs" id="thumbs" role="tablist" aria-label="Colores"></div>
+    </div>
+
+    <div class="buy">
+      <p class="eyebrow">Quitapelusas recargable</p>
+      <h1 class="buy__title">Tu ropa favorita,<br><em>como el primer día.</em></h1>
+      <p class="buy__lead">Quita las bolitas de jerséis, abrigos, sofás y mantas en segundos. Sin tijeras, sin cinta, sin estropear el tejido.</p>
+
+      <div class="price" aria-live="polite">
+        <span class="price__now" id="priceNow">34,95 €</span>
+        <s class="price__was" id="priceWas">69,90 €</s>
+        <span class="price__save" id="priceSave">Ahorras 50%</span>
+      </div>
+      <p class="price__unit" id="priceUnit">17,48 € por unidad · IVA incluido</p>
+
+      <fieldset class="field">
+        <legend class="field__label">Color: <b id="colorName">Niebla</b></legend>
+        <div class="swatches" id="swatches"></div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend class="field__label">Elige tu pack</legend>
+        <div class="bundles" id="bundles"></div>
+      </fieldset>
+
+      <button class="btn btn--xl btn--block" id="buyBtn" data-track="buy_main">
+        <span id="buyLabel">Comprar ahora</span>
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="buy__pay">
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 10V8a6 6 0 1112 0v2M5 10h14v10H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        Pago seguro con Stripe · Apple Pay · Google Pay · Tarjeta
+      </p>
+      <p class="buy__stock" id="stockNote" hidden></p>
+
+      <ul class="perks">
+        <li><span class="perks__ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span><div><b>Envío gratis</b><small id="shipEta">Llega en 2-5 días laborables</small></div></li>
+        <li><span class="perks__ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12a8 8 0 108-8H7M7 1L4 4l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><b>30 días de prueba</b><small>Si no te convence, te devolvemos el dinero</small></div></li>
+        <li><span class="perks__ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="7" width="16" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M21 10.5v3M11.5 9l-2 3h3l-2 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><b>Recargable USB-C</b><small>Sin pilas, carga con el cargador del móvil</small></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ANTES / DESPUÉS -->
+<section class="section section--ink" id="antes-despues">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow eyebrow--light">Desliza para ver la diferencia</p>
+      <h2>Una pasada. <em>Adiós bolitas.</em></h2>
+    </div>
+    <div class="compare" id="compare" style="--pos:50%">
+      <div class="compare__layer compare__after" aria-hidden="true"></div>
+      <div class="compare__layer compare__before" aria-hidden="true"></div>
+      <span class="compare__tag compare__tag--l">Antes</span>
+      <span class="compare__tag compare__tag--r">Después</span>
+      <div class="compare__handle" aria-hidden="true"><span></span></div>
+      <input class="compare__range" type="range" min="0" max="100" value="50" aria-label="Comparar antes y después">
+    </div>
+    <p class="compare__note">Ilustración. Los resultados dependen del tipo de tejido.</p>
+  </div>
+</section>
+
+<!-- DÓNDE -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Para todo lo que tiene tela</p>
+      <h2>Rescata lo que ibas a tirar.</h2>
+    </div>
+    <div class="uses">
+      <article class="use"><div class="use__art use__art--sweater"></div><h3>Jerséis</h3><p>Lana, punto y algodón vuelven a verse nuevos.</p></article>
+      <article class="use"><div class="use__art use__art--coat"></div><h3>Abrigos</h3><p>Puños y bolsillos sin bolitas antes de salir.</p></article>
+      <article class="use"><div class="use__art use__art--sofa"></div><h3>Sofás y cojines</h3><p>Tapicerías que parecen recién compradas.</p></article>
+      <article class="use"><div class="use__art use__art--blanket"></div><h3>Mantas</h3><p>Suaves otra vez, sin pelusa acumulada.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="section section--soft" id="como-funciona">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Cómo funciona</p>
+      <h2>Tres pasos. Cero esfuerzo.</h2>
+    </div>
+    <ol class="steps">
+      <li class="step"><span class="step__n">1</span><h3>Enciende</h3><p>Pulsa el botón. Las 6 cuchillas giran detrás de una rejilla protectora, nunca tocan el tejido directamente.</p></li>
+      <li class="step"><span class="step__n">2</span><h3>Desliza</h3><p>Pásalo suavemente en círculos sobre la prenda estirada. Las bolitas se cortan y van al depósito.</p></li>
+      <li class="step"><span class="step__n">3</span><h3>Vacía</h3><p>Gira el depósito transparente, tira la pelusa y listo para la siguiente prenda.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- COMPARATIVA -->
+<section class="section">
+  <div class="wrap wrap--narrow">
+    <div class="section__head">
+      <p class="eyebrow">Comparativa</p>
+      <h2>Por qué no una cuchilla o cinta.</h2>
+    </div>
+    <div class="table-wrap">
+      <table class="vs">
+        <thead><tr><th></th><th class="vs__us">Lisso</th><th>Cuchilla de afeitar</th><th>Rodillo adhesivo</th></tr></thead>
+        <tbody>
+          <tr><th>Corta las bolitas de verdad</th><td class="vs__us">✓</td><td>✓</td><td>✗</td></tr>
+          <tr><th>Sin riesgo de cortar la prenda</th><td class="vs__us">✓</td><td>✗</td><td>✓</td></tr>
+          <tr><th>Rápido en superficies grandes</th><td class="vs__us">✓</td><td>✗</td><td>~</td></tr>
+          <tr><th>Sin recambios constantes</th><td class="vs__us">✓</td><td>✗</td><td>✗</td></tr>
+          <tr><th>Sirve para sofás y mantas</th><td class="vs__us">✓</td><td>✗</td><td>~</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="section section--soft">
+  <div class="wrap specs-grid">
+    <div>
+      <p class="eyebrow">Ficha técnica</p>
+      <h2>Pequeño. Potente. Tuyo para años.</h2>
+      <p class="muted">Diseñado para caber en un cajón y estar siempre a mano antes de salir de casa.</p>
+    </div>
+    <dl class="specs" id="specs"></dl>
+  </div>
+</section>
+
+<!-- RESEÑAS (solo reales) -->
+<section class="section" id="opiniones" hidden>
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Opiniones verificadas</p>
+      <h2>Lo que dicen quienes ya lo usan.</h2>
+    </div>
+    <div class="reviews" id="reviews"></div>
+  </div>
+</section>
+
+<!-- GARANTÍA -->
+<section class="section section--accent">
+  <div class="wrap guarantee">
+    <div class="guarantee__seal" aria-hidden="true"><span>30</span><small>días</small></div>
+    <div>
+      <h2>Pruébalo 30 días en casa.</h2>
+      <p>Si no te deja la ropa como esperabas, escríbenos y te devolvemos el dinero. Sin preguntas incómodas.</p>
+    </div>
+    <a href="#comprar" class="btn btn--light" data-track="guarantee_cta">Lo quiero</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap wrap--narrow">
+    <div class="section__head">
+      <p class="eyebrow">Preguntas frecuentes</p>
+      <h2>Todo lo que te preguntas.</h2>
+    </div>
+    <div class="faq">
+      <details><summary>¿Puede estropear mi ropa?</summary><p>Las cuchillas están detrás de una rejilla metálica y solo cortan lo que sobresale. Recomendamos estirar la prenda sobre una superficie plana, pasar sin presionar y probar primero en una zona poco visible en tejidos muy finos o con hilos sueltos.</p></details>
+      <details><summary>¿Cuánto tarda en llegar?</summary><p>Enviamos desde almacén en Europa. Normalmente llega en <span data-ship-days>2-5</span> días laborables y recibirás el número de seguimiento por email en cuanto salga.</p></details>
+      <details><summary>¿Cómo se carga?</summary><p>Con el cable USB-C incluido, en cualquier cargador de móvil o puerto USB. Una carga completa da para muchas prendas.</p></details>
+      <details><summary>¿Y si no me gusta?</summary><p>Tienes 30 días desde que lo recibes para devolverlo. Escríbenos a <a data-support-email></a> y te explicamos cómo hacerlo.</p></details>
+      <details><summary>¿Los packs pueden ser de colores distintos?</summary><p>Cada pack se envía en el color que elijas. Si quieres mezclar colores, indícalo respondiendo al email de confirmación del pedido y lo ajustamos antes del envío.</p></details>
+      <details><summary>¿Es un buen regalo?</summary><p>Es de los regalos más útiles por menos de 25 €. El pack de 3 es ideal para repartir en Navidad.</p></details>
+      <details><summary>¿Qué métodos de pago aceptáis?</summary><p>Tarjeta, Apple Pay y Google Pay a través de Stripe, la plataforma de pagos que usan millones de tiendas. No guardamos los datos de tu tarjeta.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div>
+      <a href="./" class="logo logo--light"><span>Lisso</span></a>
+      <p class="muted">Cuidamos la ropa que ya tienes.</p>
+    </div>
+    <nav aria-label="Ayuda">
+      <h4>Ayuda</h4>
+      <a href="seguimiento.html">Seguir mi pedido</a>
+      <a href="devoluciones.html">Envíos y devoluciones</a>
+      <a data-support-email></a>
+    </nav>
+    <nav aria-label="Legal">
+      <h4>Legal</h4>
+      <a href="aviso-legal.html">Aviso legal</a>
+      <a href="condiciones.html">Condiciones de venta</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="cookies.html">Cookies</a>
+      <button type="button" class="linklike" data-open-consent>Configurar cookies</button>
+    </nav>
+  </div>
+  <p class="wrap footer__legal">© <span data-year></span> Lisso. Precios con IVA incluido.</p>
+</footer>
+
+<!-- Barra fija móvil -->
+<div class="sticky" id="sticky" aria-hidden="true">
+  <div class="sticky__info"><b id="stickyPrice">34,95 €</b><small id="stickyLabel">Pack 2 · Niebla</small></div>
+  <button class="btn" id="stickyBtn" data-track="buy_sticky" tabindex="-1">Comprar</button>
+</div>
+
+<div class="consent" id="consent" hidden role="dialog" aria-labelledby="consentTitle">
+  <p id="consentTitle"><b>Cookies</b> · Usamos cookies propias y de terceros (Meta, TikTok, Google) para medir y mejorar nuestros anuncios. Puedes aceptarlas o rechazarlas. <a href="cookies.html">Más info</a></p>
+  <div class="consent__btns">
+    <button class="btn btn--ghost btn--sm" data-consent="deny">Rechazar</button>
+    <button class="btn btn--sm" data-consent="grant">Aceptar</button>
+  </div>
+</div>
+
+<script src="assets/js/app.js?v={{build}}" defer></script>
+</body>
+</html>

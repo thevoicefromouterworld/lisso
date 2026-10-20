@@ -1,0 +1,22 @@
+name: "Buscar producto en CJ"
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: 'Palabras clave (inglés) o "--pid <PID>" para ver variantes'
+        default: 'lint remover electric rechargeable'
+permissions:
+  contents: read
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Buscar
+        env:
+          CJ_API_KEY: ${{ secrets.CJ_API_KEY }}
+          QUERY: ${{ inputs.query }}
+        run: |
+          if [[ "$QUERY" == --pid* ]]; then node scripts/cj-find.mjs --pid "${QUERY#--pid }"; else node scripts/cj-find.mjs "$QUERY"; fi

@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-10-20T10:50:24.289Z",
+  "variants": {
+    "niebla": {
+      "available": true,
+      "low": false
+    },
+    "arena": {
+      "available": true,
+      "low": true
+    },
+    "grafito": {
+      "available": false,
+      "low": false
+    }
+  }
+}

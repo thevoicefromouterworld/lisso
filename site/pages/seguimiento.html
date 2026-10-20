@@ -1,0 +1,21 @@
+<!--title: Seguir mi pedido | robots: index,follow-->
+<p class="eyebrow">Seguimiento</p>
+<h1>¿Dónde está mi pedido?</h1>
+<div class="card">
+  <p>Introduce el número de seguimiento que te enviamos por email cuando salió tu paquete.</p>
+  <form class="row" id="trackForm" style="margin-top:16px">
+    <label class="sr-only" for="tn">Número de seguimiento</label>
+    <input class="input" id="tn" name="tn" placeholder="Ej. CJPKL7160102171YQ" autocomplete="off" required>
+    <button class="btn" type="submit">Buscar</button>
+  </form>
+  <p class="muted" style="margin-top:16px;font-size:14px">¿Aún no tienes número? Lo enviamos en 24-48 h tras la compra. Si han pasado más de 3 días, escríbenos a <a data-support-email></a> con el email de tu compra.</p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('trackForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const n = document.getElementById('tn').value.trim().replace(/[^A-Za-z0-9]/g, '');
+    if (n) window.open('https://t.17track.net/es#nums=' + encodeURIComponent(n), '_blank', 'noopener');
+  });
+});
+</script>
