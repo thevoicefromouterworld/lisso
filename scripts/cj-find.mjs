@@ -15,6 +15,11 @@ if (args[0] === '--pid') {
   const p = await productDetail(pid);
   const inv = await productInventory(pid).catch(() => ({}));
   let md = `### ${p.productNameEn || p.productName}\npid: \`${p.pid}\`\n\n| vid | SKU | Variante | Coste | Stock por país |\n|---|---|---|---|---|\n`;
+  if (process.env.DETAIL) {
+    const strip = h => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+    const imgs = [].concat(p.productImageSet || [], p.productImage ? String(p.productImage).replace(/[\[\]"]/g, '').split(',') : []).filter(Boolean);
+    md += `\n**Peso**: ${p.productWeight ?? ''} g · **Material**: ${p.materialNameEn || p.materialName || ''} · **Embalaje**: ${p.packingNameEn || ''} · **Categoría**: ${p.categoryName || ''}\n\n**Descripción**: ${strip(p.description).slice(0, 3000)}\n\n**Imágenes**:\n${[...new Set(imgs)].map(u => '- ' + u.trim()).join('\n')}\n\n**Variantes (imagen)**:\n${(p.variants || []).map(v => `- ${v.vid}: ${v.variantImage || ''}`).join('\n')}\n\n`;
+  }
   for (const v of p.variants || []) md += `| \`${v.vid}\` | ${v.variantSku} | ${v.variantNameEn || v.variantKey || ''} | ${eur(v.variantSellPrice)} | ${Object.entries(inv[v.vid] || {}).map(([c, n]) => `${c}:${n}`).join(' ')} |\n`;
   const first = (p.variants || [])[0];
   const DEST = process.env.DEST || 'ES';

@@ -26,6 +26,7 @@ jobs:
           QUERY: ${{ inputs.query }}
           DEST: ${{ inputs.dest }}
           FROM: ${{ inputs.from }}
+          DETAIL: '1'
         run: |
           mkdir -p ops
           if [[ "$QUERY" == --pid* ]]; then node scripts/cj-find.mjs --pid "${QUERY#--pid }" | tee ops/cj-producto.md; elif [[ "$QUERY" == @* ]]; then node scripts/cj-find.mjs "$QUERY" | tee ops/cj-catalogo.md; else node scripts/cj-find.mjs "$QUERY" | tee ops/cj-busqueda.md; fi
