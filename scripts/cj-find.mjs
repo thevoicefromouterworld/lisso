@@ -20,6 +20,18 @@ if (args[0] === '--pid') {
   }
   summary(md);
  }
+} else if (args[0]?.startsWith('@')) {
+  // Catálogo con stock en un país: "@ES" o "@ES:keyword"
+  const [cc, kw] = args[0].slice(1).split(':');
+  let md = `### Catálogo CJ con stock en ${cc}${kw ? ` · "${kw}"` : ''}\n| pid | Producto | Coste | Stock | Categoría |\n|---|---|---|---|---|\n`;
+  for (let page = 1; page <= 3; page++) {
+    const d = await searchProducts(kw || '*', cc, 100, page);
+    const list = d?.content?.[0]?.productList || [];
+    if (page === 1) md = md.replace('\n|', ` (${d?.totalRecords ?? 0} productos)\n|`);
+    md += list.map(p => `| \`${p.id}\` | ${(p.nameEn || '').slice(0, 80)} | ${eur(p.sellPrice || p.nowPrice || 0)} | ${p.warehouseInventoryNum ?? ''} | ${p.threeCategoryName || p.twoCategoryName || ''} |`).join('\n') + '\n';
+    if (list.length < 100) break;
+  }
+  summary(md);
 } else {
   let md = '';
  for (const kw of (args[0] || 'lint remover').split(';').map(x => x.trim()).filter(Boolean)) {

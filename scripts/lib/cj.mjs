@@ -47,7 +47,7 @@ export async function productInventory(pid) {
   for (const v of d?.variantInventory || []) { out[v.vid] = {}; for (const i of v.inventory || []) out[v.vid][i.countryCode] = (out[v.vid][i.countryCode] || 0) + Number(i.totalInventory || 0); }
   return out;
 }
-export const searchProducts = (keyWord, countryCode, size = 20) => cj('GET', '/product/listV2', { query: { keyWord, countryCode, page: 1, size } });
+export const searchProducts = (keyWord, countryCode, size = 20, page = 1) => cj('GET', '/product/listV2', { query: { ...(keyWord && keyWord !== '*' ? { keyWord } : {}), countryCode, page, size } });
 
 /** Elige la logística: la más barata dentro del plazo máximo; si ninguna cumple, la más rápida */
 export function pickLogistic(options, maxDays) {

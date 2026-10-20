@@ -20,7 +20,7 @@ jobs:
           QUERY: ${{ inputs.query }}
         run: |
           mkdir -p ops
-          if [[ "$QUERY" == --pid* ]]; then node scripts/cj-find.mjs --pid "${QUERY#--pid }" | tee ops/cj-producto.md; else node scripts/cj-find.mjs "$QUERY" | tee ops/cj-busqueda.md; fi
+          if [[ "$QUERY" == --pid* ]]; then node scripts/cj-find.mjs --pid "${QUERY#--pid }" | tee ops/cj-producto.md; elif [[ "$QUERY" == @* ]]; then node scripts/cj-find.mjs "$QUERY" | tee ops/cj-catalogo-${QUERY:1:2}.md; else node scripts/cj-find.mjs "$QUERY" | tee ops/cj-busqueda.md; fi
       - name: Guardar resultado en ops/
         run: |
           git config user.name "lisso-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
