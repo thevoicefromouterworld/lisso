@@ -19,11 +19,11 @@ if (args[0] === '--pid') {
 } else {
   const kw = args[0] || 'lint remover electric rechargable';
   let md = `### Resultados CJ para "${kw}"\n`;
-  for (const cc of ['ES', 'DE', 'FR', 'PL']) {
+  for (const cc of ['ES', 'DE', 'FR', 'PL', 'CN']) {
     try {
       const d = await searchProducts(kw, cc, 15);
       const list = d?.content?.[0]?.productList || d?.list || d?.productList || [];
-      md += `\n#### Almacén ${cc}\n| pid | Producto | Coste | Stock |\n|---|---|---|---|\n` + list.map(p => `| \`${p.id || p.pid}\` | ${(p.nameEn || p.productNameEn || '').slice(0, 70)} | ${eur(p.sellPrice || p.nowPrice || 0)} | ${p.warehouseInventoryNum ?? p.totalVerifiedInventory ?? ''} |`).join('\n') + '\n';
+      md += `\n#### Almacén ${cc} (${d?.totalRecords ?? 0} resultados)\n| pid | Producto | Coste | Stock |\n|---|---|---|---|\n` + list.map(p => `| \`${p.id || p.pid}\` | ${(p.nameEn || p.productNameEn || '').slice(0, 70)} | ${eur(p.sellPrice || p.nowPrice || 0)} | ${p.warehouseInventoryNum ?? p.totalVerifiedInventory ?? ''} |`).join('\n') + '\n';
     } catch (e) { md += `\n${cc}: ${e.message}\n`; }
   }
   md += '\nSiguiente paso: ejecuta el workflow con `--pid <pid>` para ver los vid de cada color.';
