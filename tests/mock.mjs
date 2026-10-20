@@ -70,6 +70,7 @@ export function installMock(world) {
         return o ? json({ code: 200, result: true, data: o }) : json({ code: 1600404, result: false, message: 'order not found' });
       }
       if (p === '/logistic/trackInfo') return json({ code: 200, result: true, data: [{ trackingNumber: u.searchParams.get('trackNumber'), trackingStatus: world.trackStatus || 'In transit' }] });
+      if (p === '/product/productDetail/query') return json({ code: 200, result: true, data: { variantInventory: (world.cjVariants || []).map(v => ({ vid: v.vid, inventory: v.inventories })) } });
       if (p === '/product/query') return json({ code: 200, result: true, data: { pid: 'PID-1', variants: world.cjVariants } });
     }
     // ---- Resend

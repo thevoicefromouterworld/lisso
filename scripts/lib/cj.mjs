@@ -40,6 +40,13 @@ export const createOrder = body => cj('POST', '/shopping/order/createOrderV2', {
 export const orderDetail = orderId => cj('GET', '/shopping/order/getOrderDetail', { query: { orderId } });
 export const trackInfo = nums => cj('GET', '/logistic/trackInfo', { query: { trackNumber: nums } });
 export const productDetail = pid => cj('GET', '/product/query', { query: { pid } });
+/** Stock por variante y país: { vid: { ES: n, CN: n, ... } } */
+export async function productInventory(pid) {
+  const d = await cj('POST', '/product/productDetail/query', { body: { id: pid } });
+  const out = {};
+  for (const v of d?.variantInventory || []) { out[v.vid] = {}; for (const i of v.inventory || []) out[v.vid][i.countryCode] = (out[v.vid][i.countryCode] || 0) + Number(i.totalInventory || 0); }
+  return out;
+}
 export const searchProducts = (keyWord, countryCode, size = 20) => cj('GET', '/product/listV2', { query: { keyWord, countryCode, page: 1, size } });
 
 /** Elige la logística: la más barata dentro del plazo máximo; si ninguna cumple, la más rápida */

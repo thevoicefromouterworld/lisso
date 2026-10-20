@@ -1,6 +1,6 @@
 // Busca el producto en CJ (almacenes UE) o muestra las variantes de un pid para rellenar store.config.json
 // Uso: node scripts/cj-find.mjs "lint remover"   |   node scripts/cj-find.mjs --pid <PID>
-import { searchProducts, productDetail, freight } from './lib/cj.mjs';
+import { searchProducts, productDetail, productInventory, freight } from './lib/cj.mjs';
 import { requireEnv, summary } from './lib/util.mjs';
 requireEnv('CJ_API_KEY');
 const args = process.argv.slice(2);
@@ -11,11 +11,12 @@ const eur = usd => { const n = num(usd); return n.length > 1 ? `${(n[0] * USD_EU
 if (args[0] === '--pid') {
  for (const pid of args[1].split(/[;, ]+/).filter(Boolean)) {
   const p = await productDetail(pid);
+  const inv = await productInventory(pid).catch(() => ({}));
   let md = `### ${p.productNameEn || p.productName}\npid: \`${p.pid}\`\n\n| vid | SKU | Variante | Coste | Stock por país |\n|---|---|---|---|---|\n`;
-  for (const v of p.variants || []) md += `| \`${v.vid}\` | ${v.variantSku} | ${v.variantNameEn || v.variantKey || ''} | ${eur(v.variantSellPrice)} | ${(v.inventories || []).map(i => `${i.countryCode}:${i.totalInventory}`).join(' ')} |\n`;
+  for (const v of p.variants || []) md += `| \`${v.vid}\` | ${v.variantSku} | ${v.variantNameEn || v.variantKey || ''} | ${eur(v.variantSellPrice)} | ${Object.entries(inv[v.vid] || {}).map(([c, n]) => `${c}:${n}`).join(' ')} |\n`;
   const first = (p.variants || [])[0];
   if (first) for (const from of ['ES', 'DE', 'FR', 'PL', 'CN']) {
-    try { const o = await freight(from, 'ES', [{ vid: first.vid, quantity: 1 }]); md += `\n**Envío ${from}→ES**: ${o.slice(0, 4).map(x => `${x.logisticName} ${eur(x.totalPostageFee ?? x.logisticPrice)} (${x.logisticAging} d)`).join(' · ')}`; } catch {}
+    for (const q of [1, 2, 3]) { try { const o = await freight(from, 'ES', [{ vid: first.vid, quantity: q }]); if (o?.length) md += `\n**Envío ${from}→ES ×${q}**: ${o.slice(0, 3).map(x => `${x.logisticName} ${eur(x.totalPostageFee ?? x.logisticPrice)} (${x.logisticAging} d)`).join(' · ')}`; } catch {} }
   }
   summary(md);
  }

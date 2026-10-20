@@ -2,7 +2,7 @@
 // y abre alertas si hay rotura de stock o el coste sube.
 import fs from 'node:fs';
 import path from 'node:path';
-import { productDetail } from './lib/cj.mjs';
+import { productDetail, productInventory } from './lib/cj.mjs';
 import { loadConfig, ROOT } from './lib/config.mjs';
 import { alertIssue } from './lib/github.mjs';
 import { notifyOps } from './lib/email.mjs';
@@ -17,13 +17,14 @@ const USD_EUR = Number(process.env.USD_EUR || 0.92);
 export async function run() {
   if (!F.cjProductId) { log('Sin cjProductId en store.config.json: nada que vigilar.'); return; }
   const p = await productDetail(F.cjProductId);
+  const stock = await productInventory(F.cjProductId);
   const origins = new Set([F.fromCountryCode, ...(F.fallbackFromCountryCodes || [])]);
   const result = { updatedAt: new Date().toISOString(), variants: {} };
   const rows = [];
   for (const v of cfg.variants) {
     const cv = (p.variants || []).find(x => x.vid === v.cjVid);
     if (!cv) { result.variants[v.id] = { available: true, unknown: true }; rows.push(`| ${v.name} | ? | vid no encontrado |`); continue; }
-    const inv = (cv.inventories || []).filter(i => origins.has(i.countryCode)).reduce((a, i) => a + Number(i.totalInventory || 0), 0);
+    const inv = Object.entries(stock[v.cjVid] || {}).filter(([cc]) => origins.has(cc)).reduce((a, [, n]) => a + n, 0);
     const costEUR = Number(cv.variantSellPrice || 0) * USD_EUR;
     result.variants[v.id] = { available: inv > 0, low: inv > 0 && inv < F.lowStockThreshold };
     rows.push(`| ${v.name} | ${inv} | ${inv === 0 ? 'AGOTADO' : inv < F.lowStockThreshold ? 'bajo' : 'ok'} |`);
