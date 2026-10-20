@@ -6,7 +6,9 @@ requireEnv('CJ_API_KEY');
 const args = process.argv.slice(2);
 const USD_EUR = Number(process.env.USD_EUR || 0.92);
 const num = v => { const m = String(v ?? '').match(/\d+(\.\d+)?/g); return m ? m.map(Number) : [NaN]; };
-const eur = usd => { const n = num(usd); return n.length > 1 ? `${(n[0] * USD_EUR).toFixed(2)}–${(n[n.length - 1] * USD_EUR).toFixed(2)} €` : (n[0] * USD_EUR).toFixed(2) + ' €'; };
+const USD = (process.env.DEST || 'ES') === 'US';
+const R_ = USD ? 1 : USD_EUR, SYM = USD ? ' $' : ' €';
+const eur = usd => { const n = num(usd); return n.length > 1 ? `${(n[0] * R_).toFixed(2)}–${(n[n.length - 1] * R_).toFixed(2)}${SYM}` : (n[0] * R_).toFixed(2) + SYM; };
 
 if (args[0] === '--pid') {
  for (const pid of args[1].split(/[;, ]+/).filter(Boolean)) {
@@ -15,8 +17,10 @@ if (args[0] === '--pid') {
   let md = `### ${p.productNameEn || p.productName}\npid: \`${p.pid}\`\n\n| vid | SKU | Variante | Coste | Stock por país |\n|---|---|---|---|---|\n`;
   for (const v of p.variants || []) md += `| \`${v.vid}\` | ${v.variantSku} | ${v.variantNameEn || v.variantKey || ''} | ${eur(v.variantSellPrice)} | ${Object.entries(inv[v.vid] || {}).map(([c, n]) => `${c}:${n}`).join(' ')} |\n`;
   const first = (p.variants || [])[0];
-  if (first) for (const from of ['ES', 'DE', 'FR', 'PL', 'CN']) {
-    for (const q of [1, 2, 3]) { try { const o = await freight(from, 'ES', [{ vid: first.vid, quantity: q }]); if (o?.length) md += `\n**Envío ${from}→ES ×${q}**: ${o.slice(0, 3).map(x => `${x.logisticName} ${eur(x.totalPostageFee ?? x.logisticPrice)} (${x.logisticAging} d)`).join(' · ')}`; } catch {} }
+  const DEST = process.env.DEST || 'ES';
+  if (first)
+  for (const from of (process.env.FROM || 'ES,DE,FR,PL,CN').split(',')) {
+    for (const q of [1, 2, 3]) { try { const o = await freight(from, DEST, [{ vid: first.vid, quantity: q }]); if (o?.length) md += `\n**Envío ${from}→${DEST} ×${q}**: ${o.slice(0, 3).map(x => `${x.logisticName} ${eur(x.totalPostageFee ?? x.logisticPrice)} (${x.logisticAging} d)`).join(' · ')}`; } catch {} }
   }
   summary(md);
  }
@@ -26,12 +30,15 @@ if (args[0] === '--pid') {
  let all = '';
  for (const cc of ccs.split(',')) {
   let md = `### Catálogo CJ con stock en ${cc}${kw ? ` · "${kw}"` : ''}\n| pid | Producto | Coste | Stock | Categoría |\n|---|---|---|---|---|\n`;
-  for (let page = 1; page <= 3; page++) {
-    const d = await searchProducts(kw || '*', cc, 100, page);
+  for (const k of (kw || '*').split(';')) {
+  if (kw) md += `\n**${k}**\n`;
+  for (let page = 1; page <= (kw ? 1 : 3); page++) {
+    const d = await searchProducts(k, cc, kw ? 20 : 100, page);
     const list = d?.content?.[0]?.productList || [];
     if (page === 1) md = md.replace('\n|', ` (${d?.totalRecords ?? 0} productos)\n|`);
     md += list.map(p => `| \`${p.id}\` | ${(p.nameEn || '').slice(0, 80)} | ${eur(p.sellPrice || p.nowPrice || 0)} | ${p.warehouseInventoryNum ?? ''} | ${p.threeCategoryName || p.twoCategoryName || ''} |`).join('\n') + '\n';
     if (list.length < 100) break;
+  }
   }
   all += md + '\n';
  }

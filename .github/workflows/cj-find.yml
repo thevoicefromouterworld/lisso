@@ -5,6 +5,12 @@ on:
       query:
         description: 'Palabras clave (inglés) o "--pid <PID>" para ver variantes'
         default: 'lint remover electric rechargeable'
+      dest:
+        description: 'País destino para calcular envío (ES, US...)'
+        default: 'US'
+      from:
+        description: 'Almacenes origen para calcular envío'
+        default: 'US,CN'
 permissions:
   contents: write
 jobs:
@@ -18,6 +24,8 @@ jobs:
         env:
           CJ_API_KEY: ${{ secrets.CJ_API_KEY }}
           QUERY: ${{ inputs.query }}
+          DEST: ${{ inputs.dest }}
+          FROM: ${{ inputs.from }}
         run: |
           mkdir -p ops
           if [[ "$QUERY" == --pid* ]]; then node scripts/cj-find.mjs --pid "${QUERY#--pid }" | tee ops/cj-producto.md; elif [[ "$QUERY" == @* ]]; then node scripts/cj-find.mjs "$QUERY" | tee ops/cj-catalogo.md; else node scripts/cj-find.mjs "$QUERY" | tee ops/cj-busqueda.md; fi
