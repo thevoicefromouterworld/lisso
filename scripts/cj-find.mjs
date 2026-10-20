@@ -22,7 +22,9 @@ if (args[0] === '--pid') {
  }
 } else if (args[0]?.startsWith('@')) {
   // Catálogo con stock en un país: "@ES" o "@ES:keyword"
-  const [cc, kw] = args[0].slice(1).split(':');
+  const [ccs, kw] = args[0].slice(1).split(':');
+ let all = '';
+ for (const cc of ccs.split(',')) {
   let md = `### Catálogo CJ con stock en ${cc}${kw ? ` · "${kw}"` : ''}\n| pid | Producto | Coste | Stock | Categoría |\n|---|---|---|---|---|\n`;
   for (let page = 1; page <= 3; page++) {
     const d = await searchProducts(kw || '*', cc, 100, page);
@@ -31,7 +33,9 @@ if (args[0] === '--pid') {
     md += list.map(p => `| \`${p.id}\` | ${(p.nameEn || '').slice(0, 80)} | ${eur(p.sellPrice || p.nowPrice || 0)} | ${p.warehouseInventoryNum ?? ''} | ${p.threeCategoryName || p.twoCategoryName || ''} |`).join('\n') + '\n';
     if (list.length < 100) break;
   }
-  summary(md);
+  all += md + '\n';
+ }
+  summary(all);
 } else {
   let md = '';
  for (const kw of (args[0] || 'lint remover').split(';').map(x => x.trim()).filter(Boolean)) {
