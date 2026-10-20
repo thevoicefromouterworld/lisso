@@ -1,4 +1,9 @@
 {
-  "updatedAt": null,
-  "variants": {}
+  "updatedAt": "2026-10-20T16:51:36.190Z",
+  "variants": {
+    "classic": {
+      "available": true,
+      "low": false
+    }
+  }
 }
