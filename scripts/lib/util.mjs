@@ -9,7 +9,8 @@ export const round2 = n => Math.round(n * 100) / 100;
 export const log = (...a) => console.log(...a);
 export function summary(md) {
   const f = process.env.GITHUB_STEP_SUMMARY;
-  if (f) fs.appendFileSync(f, md + '\n'); else console.log(md);
+  if (f) fs.appendFileSync(f, md + '\n');
+  console.log(md);
 }
 /** Ref corta y no identificable de un pedido para logs/issues */
 export const ref = (prefix, piId) => `${prefix}-${String(piId).replace(/^pi_/, '')}`;
