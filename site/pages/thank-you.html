@@ -1,0 +1,29 @@
+<!--title: Order confirmed | robots: noindex-->
+<section class="thanks">
+  <div class="thanks__check"><svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <p class="eyebrow">Order confirmed</p>
+  <h1>Thank you! Your snowfall is on its way.</h1>
+  <p class="muted" id="thanksSummary">Your payment went through and your receipt is in your inbox.</p>
+  <ol class="timeline">
+    <li><span>1</span><div><b>Today</b><br><small class="muted">We prepare your order at our US warehouse.</small></div></li>
+    <li><span>2</span><div><b>Within 1–2 business days</b><br><small class="muted">Your package ships and we email you a tracking number.</small></div></li>
+    <li><span>3</span><div><b>In <span data-ship-days>3–8</span> business days</b><br><small class="muted">It arrives at your door. You have 30 days to fall in love with it.</small></div></li>
+  </ol>
+  <p style="margin-top:32px"><a class="btn btn--ghost" href="./">Back to the store</a></p>
+  <p class="muted" style="margin-top:20px;font-size:14px">Need to change your address? Reply to your receipt email within 12 hours.</p>
+</section>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S = window.STORE || {}, q = new URLSearchParams(location.search);
+  const b = (S.bundles || []).find(x => x.id === q.get('pack'));
+  const v = (S.variants || []).find(x => x.id === q.get('color')) || (S.variants || [])[0];
+  const sid = q.get('session_id') || '';
+  const money = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: S.brand?.currency || 'USD' }).format(n);
+  if (b) document.getElementById('thanksSummary').textContent = `${b.label} · ${money(b.price)}. Your receipt is in your inbox.`;
+  let fired = []; try { fired = JSON.parse(localStorage.getItem('snowlit_purchases') || '[]'); } catch {}
+  if (b && sid && !fired.includes(sid) && window.SnowlitTrack) {
+    window.SnowlitTrack('Purchase', { value: b.price, currency: S.brand?.currency || 'USD', content_ids: [`${b.id}-${v ? v.id : ''}`], num_items: b.qty, content_type: 'product' }, { eventID: sid });
+    fired.push(sid); try { localStorage.setItem('snowlit_purchases', JSON.stringify(fired.slice(-20))); } catch {}
+  }
+});
+</script>

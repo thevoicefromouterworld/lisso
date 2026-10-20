@@ -20,12 +20,12 @@ export function setupEnv() {
   return { dir, cfgPath: p };
 }
 
-export function makeSession({ id, pack = 'pack2', color = 'arena', zip = '08001', state = 'B', refunded = false, created }) {
+export function makeSession({ id, pack = 'pack2', color = 'classic', zip = '94110', state = 'CA', country = 'US', refunded = false, created }) {
   return {
-    id: 'cs_' + id, object: 'checkout.session', status: 'complete', payment_status: 'paid', amount_total: 3495,
+    id: 'cs_' + id, object: 'checkout.session', status: 'complete', payment_status: 'paid', amount_total: 3495, currency: 'usd',
     created: created ?? Math.floor(Date.now() / 1000) - 3600,
-    customer_details: { email: `${id}@example.com`, name: 'Ana García', phone: '+34600111222' },
-    shipping_details: { name: 'Ana García', address: { line1: 'Carrer Major 1', line2: '2º 1ª', city: 'Barcelona', postal_code: zip, state, country: 'ES' } },
+    customer_details: { email: `${id}@example.com`, name: 'Jane Doe', phone: '+14155550100' },
+    shipping_details: { name: 'Jane Doe', address: { line1: '123 Valencia St', line2: 'Apt 4', city: 'San Francisco', postal_code: zip, state, country } },
     payment_intent: { id: 'pi_' + id + '0000000000', metadata: { pack, color, qty: '2' }, latest_charge: { id: 'ch_' + id, refunded, amount_refunded: refunded ? 3495 : 0 } }
   };
 }
@@ -55,9 +55,9 @@ export function installMock(world) {
       const p = u.pathname.replace('/api2.0/v1', '');
       if (p === '/authentication/getAccessToken') return json({ code: 200, result: true, data: { accessToken: 'tok' } });
       if (p === '/logistic/freightCalculate') return json({ code: 200, result: true, data: [
-        { logisticName: 'Correos Express', logisticAging: '2-4', logisticPrice: 4.1 },
-        { logisticName: 'CJPacket Slow', logisticAging: '8-15', logisticPrice: 2.0 },
-        { logisticName: 'DHL', logisticAging: '1-3', logisticPrice: 9.9 }] });
+        { logisticName: 'UniUni+', logisticAging: '3-8', logisticPrice: 7.57 },
+        { logisticName: 'CJPacket Slow', logisticAging: '10-15', logisticPrice: 2.0 },
+        { logisticName: 'USPS+', logisticAging: '3-7', logisticPrice: 8.49 }] });
       if (p === '/shopping/order/createOrderV2') {
         if (world.cjFail) return json({ code: 1600200, result: false, message: world.cjFail });
         const body = JSON.parse(opts.body); const orderId = 'CJ' + (Object.keys(world.cjOrders).length + 1);

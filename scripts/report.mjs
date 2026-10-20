@@ -2,16 +2,17 @@
 import { paidSessions } from './lib/stripe.mjs';
 import { loadConfig } from './lib/config.mjs';
 import { notifyOps } from './lib/email.mjs';
-import { requireEnv, summary, money, round2, isPrivateRepo } from './lib/util.mjs';
+import { requireEnv, summary, round2, isPrivateRepo } from './lib/util.mjs';
 
 requireEnv('STRIPE_SECRET_KEY');
 const cfg = loadConfig();
 const E = cfg.economics;
+const money = n => new Intl.NumberFormat('es-ES', { style: 'currency', currency: cfg.brand.currency || 'USD' }).format(n);
 
 export function unitEconomics(bundle) {
   const net = bundle.price / (1 + E.vatRate);
-  const cogs = E.unitCostEUR * bundle.qty + (E.shippingCostEUR[String(bundle.qty)] ?? E.shippingCostEUR['1'] * bundle.qty);
-  const fees = bundle.price * E.paymentFeePct + E.paymentFeeFixedEUR;
+  const cogs = E.unitCost * bundle.qty + (E.shippingCost[String(bundle.qty)] ?? E.shippingCost['1'] * bundle.qty);
+  const fees = bundle.price * E.paymentFeePct + E.paymentFeeFixed;
   const contribution = net - cogs - fees;
   return { net: round2(net), cogs: round2(cogs), fees: round2(fees), contribution: round2(contribution), breakevenCPA: round2(contribution) };
 }

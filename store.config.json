@@ -1,103 +1,64 @@
 {
   "brand": {
-    "name": "Lisso",
-    "tagline": "Tu jersey favorito, como el primer día.",
-    "productName": "Lisso Quitapelusas Recargable",
-    "supportEmail": "hola@lisso.shop",
-    "siteUrl": "https://thevoicefromouterworld.github.io/lisso",
-    "currency": "EUR",
-    "locale": "es-ES",
+    "name": "Snowlit",
+    "tagline": "A little window where it's always snowing.",
+    "productName": "Snowlit Snowy Street Night Light",
+    "supportEmail": "hello@snowlit.shop",
+    "siteUrl": "https://thevoicefromouterworld.github.io/snowlit",
+    "currency": "USD",
+    "locale": "en-US",
     "legal": {
-      "ownerName": "[NOMBRE O RAZÓN SOCIAL]",
-      "taxId": "[NIF/CIF]",
-      "address": "[DIRECCIÓN FISCAL], Barcelona, España",
+      "ownerName": "[LEGAL NAME / COMPANY]",
+      "taxId": "[TAX ID]",
+      "address": "[REGISTERED ADDRESS], Barcelona, Spain",
       "registry": ""
     }
   },
   "variants": [
     {
-      "id": "niebla",
-      "name": "Niebla",
-      "hex": "#ECE8E1",
-      "accent": "#C9C2B6",
-      "cjVid": ""
-    },
-    {
-      "id": "arena",
-      "name": "Arena",
-      "hex": "#E3C9B4",
-      "accent": "#C29A7C",
-      "cjVid": ""
-    },
-    {
-      "id": "grafito",
-      "name": "Grafito",
-      "hex": "#3B3A3C",
-      "accent": "#1F1E20",
-      "cjVid": ""
+      "id": "classic",
+      "name": "Snowy Street",
+      "hex": "#E9EEF5",
+      "accent": "#AFC0D6",
+      "cjVid": "2410070511391608600"
     }
   ],
   "bundles": [
-    {
-      "id": "pack1",
-      "qty": 1,
-      "label": "1 unidad",
-      "price": 24.95,
-      "compareAt": null,
-      "badge": ""
-    },
-    {
-      "id": "pack2",
-      "qty": 2,
-      "label": "Pack 2",
-      "price": 34.95,
-      "compareAt": 49.9,
-      "badge": "El más elegido",
-      "default": true
-    },
-    {
-      "id": "pack3",
-      "qty": 3,
-      "label": "Pack regalo 3",
-      "price": 44.95,
-      "compareAt": 74.85,
-      "badge": "Mejor precio"
-    }
+    { "id": "pack1", "qty": 1, "label": "1 Snowlit", "price": 24.95, "compareAt": null, "badge": "" },
+    { "id": "pack2", "qty": 2, "label": "2 Snowlits", "price": 34.95, "compareAt": 49.9, "badge": "Most popular", "default": true },
+    { "id": "pack3", "qty": 3, "label": "3 Snowlits · Gift set", "price": 44.95, "compareAt": 74.85, "badge": "Best value" }
   ],
   "shipping": {
-    "countries": [
-      "ES"
-    ],
-    "label": "Envío gratis · 2-5 días laborables",
-    "minDays": 2,
-    "maxDays": 5,
-    "returnDays": 30
+    "countries": ["US"],
+    "label": "Free US shipping · 3–8 business days",
+    "minDays": 3,
+    "maxDays": 8,
+    "returnDays": 30,
+    "christmasCutoff": "2026-12-10"
+  },
+  "media": {
+    "hero": "https://oss-cf.cjdropshipping.com/product/2024/10/07/05/25256209-2abf-4b1d-bd48-b5216cfc519e.jpg",
+    "detail": "https://oss-cf.cjdropshipping.com/product/2024/10/07/05/0d9ad333-28b3-4355-8817-9d878a9de444.jpg",
+    "lifestyle": "https://oss-cf.cjdropshipping.com/product/2024/11/11/06/a3ab8a32-74a0-44d0-878c-f10bf8be5fba.jpg"
   },
   "economics": {
-    "unitCostEUR": 5,
-    "shippingCostEUR": {
-      "1": 3.5,
-      "2": 4.5,
-      "3": 5.5
-    },
-    "vatRate": 0.21,
-    "paymentFeePct": 0.015,
-    "paymentFeeFixedEUR": 0.25
+    "currencySymbol": "$",
+    "unitCost": 1.65,
+    "shippingCost": { "1": 7.57, "2": 10.49, "3": 12.85 },
+    "vatRate": 0,
+    "paymentFeePct": 0.053,
+    "paymentFeeFixed": 0.3
   },
   "fulfillment": {
     "provider": "cj",
     "autoPay": true,
-    "fromCountryCode": "ES",
-    "fallbackFromCountryCodes": [
-      "DE",
-      "FR",
-      "PL"
-    ],
+    "fromCountryCode": "US",
+    "fallbackFromCountryCodes": [],
     "logisticPreference": "cheapest_within_max_days",
-    "maxShippingDays": 7,
-    "orderPrefix": "LS",
-    "cjProductId": "",
-    "lowStockThreshold": 50
+    "maxShippingDays": 8,
+    "orderPrefix": "SL",
+    "cjProductId": "2410070511391608200",
+    "lowStockThreshold": 150
   },
   "tracking": {
     "metaPixelId": "",
@@ -105,54 +66,14 @@
     "ga4Id": ""
   },
   "reviewsFormUrl": "",
-  "paymentLinks": {
-    "pack1:niebla": "https://buy.stripe.com/test_bJecN46lr3FW47J6LNgw000",
-    "pack1:arena": "https://buy.stripe.com/test_9B63cu6lr2BSbAb5HJgw001",
-    "pack1:grafito": "https://buy.stripe.com/test_6oUfZgdNT3FWbAbc67gw002",
-    "pack2:niebla": "https://buy.stripe.com/test_28E9ASbFL2BS7jV7PRgw003",
-    "pack2:arena": "https://buy.stripe.com/test_8x2dR84dj7Wc8nZc67gw004",
-    "pack2:grafito": "https://buy.stripe.com/test_3cI4gyaBHdgwcEf5HJgw005",
-    "pack3:niebla": "https://buy.stripe.com/test_28EcN48tz3FWcEffijgw006",
-    "pack3:arena": "https://buy.stripe.com/test_4gM5kC39f7WccEf5HJgw007",
-    "pack3:grafito": "https://buy.stripe.com/test_dRmeVc6lr1xOdIj4DFgw008"
-  },
+  "paymentLinks": {},
   "specs": [
-    [
-      "Cuchillas",
-      "6 cuchillas de acero inoxidable"
-    ],
-    [
-      "Velocidades",
-      "2 velocidades"
-    ],
-    [
-      "Batería",
-      "Recargable por USB-C (cable incluido)"
-    ],
-    [
-      "Autonomía",
-      "Hasta 60 min por carga (aprox.)"
-    ],
-    [
-      "Seguridad",
-      "Rejilla protectora + bloqueo si se abre el cabezal"
-    ],
-    [
-      "Incluye",
-      "Quitapelusas, cable USB-C, cepillo de limpieza, cuchilla de recambio"
-    ]
+    ["What it is", "DIY snowy street-light kit: a clear case, a miniature lamp post and loose \"snow\" you arrange yourself"],
+    ["Light", "Warm LED street lamp with on/off switch (≤5W)"],
+    ["Material", "Clear plastic case"],
+    ["Weight", "About 10 oz (280 g)"],
+    ["Assembly", "Around 20–30 minutes, illustrated tutorial included"],
+    ["In the box", "1 night-light kit + tutorial + gift bag with window"]
   ],
-  "specsNote": "Revisa estas especificaciones contra la ficha del proveedor antes de lanzar.",
-  "paymentLinkIds": {
-    "pack1:niebla": "plink_1USax4CTKZmIFRtCWjGspuRk",
-    "pack1:arena": "plink_1USax4CTKZmIFRtCITUbHxeX",
-    "pack1:grafito": "plink_1USax4CTKZmIFRtCqt8mJ1kA",
-    "pack2:niebla": "plink_1USax5CTKZmIFRtC7ZFJcK5J",
-    "pack2:arena": "plink_1USax5CTKZmIFRtCIltqZlLp",
-    "pack2:grafito": "plink_1USax5CTKZmIFRtCPbr1dYSw",
-    "pack3:niebla": "plink_1USax5CTKZmIFRtC5an3tRYG",
-    "pack3:arena": "plink_1USax6CTKZmIFRtCGqbAPDKD",
-    "pack3:grafito": "plink_1USax6CTKZmIFRtCfOIMaPZZ"
-  },
-  "stripeMode": "test"
+  "specsNote": "Verify power source, size and contents with a sample before running ads."
 }

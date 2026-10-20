@@ -31,8 +31,8 @@ export function buildOrder(session, cfg, logisticName, fromCountryCode) {
   return {
     orderNumber: ref(F.orderPrefix, pi.id),
     shippingCountryCode: a.country,
-    shippingCountry: a.country === 'ES' ? 'Spain' : a.country,
-    shippingProvince: a.state || provinceFromZip(a.postal_code) || a.city,
+    shippingCountry: ({ ES: 'Spain', US: 'United States' })[a.country] || a.country,
+    shippingProvince: a.state || (a.country === 'ES' ? provinceFromZip(a.postal_code) : null) || a.city,
     shippingCity: a.city,
     shippingZip: a.postal_code,
     shippingAddress: a.line1,
@@ -76,8 +76,8 @@ async function processSession(s) {
     if (!DRY) await setPIMeta(pi.id, { fulfillment_status: 'skipped', fulfillment_note: 'reembolsado/disputado antes de enviar' });
     stats.skipped++; log(`${r}: omitido (reembolso/disputa)`); return;
   }
-  const zip = shippingOf(s)?.address?.postal_code;
-  if (isRemoteZip(zip)) {
+  const addr = shippingOf(s)?.address || {};
+  if (addr.country === 'ES' && isRemoteZip(addr.postal_code)) {
     if (!DRY) await setPIMeta(pi.id, { fulfillment_status: 'manual', fulfillment_note: 'zona remota (Canarias/Ceuta/Melilla): revisar' });
     await alertIssue(`Pedido ${r} requiere revisión manual`, 'Destino Canarias/Ceuta/Melilla. Revisa el pedido en Stripe y tramítalo manualmente en CJ (o reembolsa).');
     stats.skipped++; return;

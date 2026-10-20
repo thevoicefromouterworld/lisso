@@ -46,9 +46,9 @@ const prices = cfg.bundles.map(b => b.price);
 const jsonld = JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Product',
   name: cfg.brand.productName, brand: { '@type': 'Brand', name: cfg.brand.name },
-  description: 'Quitapelusas eléctrico recargable por USB-C para ropa, sofás y mantas.',
+  description: 'DIY snowy street night light kit: a miniature street lamp glowing through snow in a clear case.',
   image: `${url}/assets/img/og.png`,
-  offers: { '@type': 'AggregateOffer', priceCurrency: 'EUR', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: cfg.bundles.length, availability: 'https://schema.org/InStock', url: `${url}/` }
+  offers: { '@type': 'AggregateOffer', priceCurrency: cfg.brand.currency, lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: cfg.bundles.length, availability: 'https://schema.org/InStock', url: `${url}/` }
 }).replace(/</g, '\\u003c');
 
 // index
@@ -64,7 +64,7 @@ for (const f of fs.readdirSync(path.join(SRC, 'pages'))) {
   body = body.replace(/^<!--.*?-->\n?/, '');
   const scripts = [...body.matchAll(/<script>[\s\S]*?<\/script>/g)].map(m => m[0]).join('\n');
   body = body.replace(/<script>[\s\S]*?<\/script>/g, '');
-  const html = tpl(layout, { title: meta.title || 'Lisso', robots: meta.robots || 'index,follow', content: tpl(body), scripts, build });
+  const html = tpl(layout, { title: meta.title || cfg.brand.name, robots: meta.robots || 'index,follow', content: tpl(body), scripts, build });
   fs.writeFileSync(path.join(OUT, f), html);
   if (!(meta.robots || '').includes('noindex')) pages.push(f);
 }
@@ -75,6 +75,19 @@ fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap
 const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${['', ...pages].map(p => `  <url><loc>${url}/${p}</loc><lastmod>${today}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 if (cfg.brand.customDomain) fs.writeFileSync(path.join(OUT, 'CNAME'), cfg.brand.customDomain + '\n');
+
+// Fotos del producto: se descargan en el build (Actions) para no enlazar al CDN del proveedor
+if (cfg.media && process.env.FETCH_MEDIA !== '0') {
+  const dir = path.join(OUT, 'assets/media'); fs.mkdirSync(dir, { recursive: true });
+  for (const [k, u] of Object.entries(cfg.media)) {
+    try {
+      const r = await fetch(u, { signal: AbortSignal.timeout(15000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      fs.writeFileSync(path.join(dir, `${k}.jpg`), Buffer.from(await r.arrayBuffer()));
+      console.log(`✓ media ${k}`);
+    } catch (e) { console.log(`⚠ media ${k}: ${e.message} (la web usará la ilustración)`); }
+  }
+}
 
 const missing = cfg.bundles.flatMap(b => cfg.variants.map(v => `${b.id}:${v.id}`)).filter(k => !(cfg.paymentLinks || {})[k]);
 console.log(`✓ Build en ${path.relative(ROOT, OUT)} · ${url}`);

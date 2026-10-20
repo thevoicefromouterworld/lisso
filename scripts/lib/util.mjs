@@ -2,7 +2,7 @@ import fs from 'node:fs';
 export const sleep = ms => new Promise(r => setTimeout(r, ms));
 export const env = (k, d) => (process.env[k] ?? d);
 export const DRY = /^(1|true|yes)$/i.test(process.env.DRY_RUN || '');
-export const money = n => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n);
+export const money = (n, currency = 'USD') => new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(n);
 export const round2 = n => Math.round(n * 100) / 100;
 
 /** Log seguro: nunca imprimir datos personales en logs (el repo es público). */

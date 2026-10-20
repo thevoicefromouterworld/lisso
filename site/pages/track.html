@@ -1,0 +1,21 @@
+<!--title: Track my order | robots: index,follow-->
+<p class="eyebrow">Order tracking</p>
+<h1>Where's my Snowlit?</h1>
+<div class="card">
+  <p>Enter the tracking number from your shipping confirmation email.</p>
+  <form class="row" id="trackForm" style="margin-top:16px">
+    <label class="sr-only" for="tn">Tracking number</label>
+    <input class="input" id="tn" name="tn" placeholder="e.g. UUS5A1234567890" autocomplete="off" required>
+    <button class="btn" type="submit">Track</button>
+  </form>
+  <p class="muted" style="margin-top:16px;font-size:14px">No tracking number yet? We email it within 1–2 business days of your order. If it's been longer than 3 days, write to <a data-support-email></a> with the email you used at checkout.</p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('trackForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const n = document.getElementById('tn').value.trim().replace(/[^A-Za-z0-9]/g, '');
+    if (n) window.open('https://t.17track.net/en#nums=' + encodeURIComponent(n), '_blank', 'noopener');
+  });
+});
+</script>

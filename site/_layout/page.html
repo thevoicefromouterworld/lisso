@@ -1,26 +1,26 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{{title}} · Lisso</title>
+<title>{{title}} · Snowlit</title>
 <meta name="robots" content="{{robots}}">
-<meta name="theme-color" content="#F5F0E8">
+<meta name="theme-color" content="#0B1020">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css?v={{build}}">
 <script src="config.js?v={{build}}"></script>
 </head>
 <body>
 <header class="header">
   <div class="wrap header__inner">
-    <a href="./" class="logo" aria-label="Lisso, inicio">
-      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 13.5c2.5 2.5 7.5 2.5 10 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <span>Lisso</span>
+    <a href="./" class="logo" aria-label="Snowlit home">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="var(--glow)"/></svg>
+      <span>Snowlit</span>
     </a>
-    <a href="./#comprar" class="btn btn--sm">Comprar</a>
+    <a href="./#buy" class="btn btn--sm">Shop now</a>
   </div>
 </header>
 <main class="page">
@@ -30,15 +30,15 @@
 </main>
 <footer class="footer">
   <div class="wrap footer__grid">
-    <div><a href="./" class="logo logo--light"><span>Lisso</span></a><p class="muted">Cuidamos la ropa que ya tienes.</p></div>
-    <nav aria-label="Ayuda"><h4>Ayuda</h4><a href="seguimiento.html">Seguir mi pedido</a><a href="devoluciones.html">Envíos y devoluciones</a><a data-support-email></a></nav>
-    <nav aria-label="Legal"><h4>Legal</h4><a href="aviso-legal.html">Aviso legal</a><a href="condiciones.html">Condiciones de venta</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a><button type="button" class="linklike" data-open-consent>Configurar cookies</button></nav>
+    <div><a href="./" class="logo"><span>Snowlit</span></a><p class="muted">Small lights for long winter nights.</p></div>
+    <nav aria-label="Help"><h4>Help</h4><a href="track.html">Track my order</a><a href="shipping.html">Shipping & returns</a><a data-support-email></a></nav>
+    <nav aria-label="Legal"><h4>Legal</h4><a href="terms.html">Terms of service</a><a href="privacy.html">Privacy policy</a><a href="legal.html">Legal notice</a><button type="button" class="linklike" data-open-consent>Cookie settings</button></nav>
   </div>
-  <p class="wrap footer__legal">© <span data-year></span> Lisso. Precios con IVA incluido.</p>
+  <p class="wrap footer__legal">© <span data-year></span> Snowlit. All prices in USD.</p>
 </footer>
 <div class="consent" id="consent" hidden role="dialog" aria-labelledby="consentTitle">
-  <p id="consentTitle"><b>Cookies</b> · Usamos cookies propias y de terceros (Meta, TikTok, Google) para medir y mejorar nuestros anuncios. Puedes aceptarlas o rechazarlas. <a href="cookies.html">Más info</a></p>
-  <div class="consent__btns"><button class="btn btn--ghost btn--sm" data-consent="deny">Rechazar</button><button class="btn btn--sm" data-consent="grant">Aceptar</button></div>
+  <p id="consentTitle"><b>Cookies</b> · We use cookies from Meta, TikTok and Google to measure our ads. You can accept or decline. <a href="privacy.html#cookies">Learn more</a></p>
+  <div class="consent__btns"><button class="btn btn--ghost btn--sm" data-consent="deny">Decline</button><button class="btn btn--sm" data-consent="grant">Accept</button></div>
 </div>
 <script src="assets/js/app.js?v={{build}}" defer></script>
 {{scripts}}

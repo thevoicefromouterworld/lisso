@@ -9,17 +9,19 @@ const fulfill = await import('../scripts/fulfill.mjs');
 const tracking = await import('../scripts/tracking.mjs');
 
 test('pedido pagado → pedido en CJ con vid, cantidad, dirección y logística correctas', async () => {
-  world.sessions = [makeSession({ id: 'a1', state: '' })];
+  world.sessions = [makeSession({ id: 'a1' })];
   const st = await fulfill.run();
   assert.equal(st.ordered, 1);
   const order = Object.values(world.cjOrders)[0];
-  assert.equal(order.products[0].vid, 'VID-ARENA');
+  assert.equal(order.products[0].vid, 'VID-CLASSIC');
   assert.equal(order.products[0].quantity, 2);
-  assert.equal(order.shippingProvince, 'Barcelona', 'provincia deducida del CP si Stripe no la da');
-  assert.equal(order.logisticName, 'Correos Express', 'la más barata dentro de 7 días');
-  assert.equal(order.fromCountryCode, 'ES');
+  assert.equal(order.shippingProvince, 'CA');
+  assert.equal(order.shippingCountry, 'United States');
+  assert.equal(order.shippingZip, '94110');
+  assert.equal(order.logisticName, 'UniUni+', 'la más barata dentro del plazo máximo');
+  assert.equal(order.fromCountryCode, 'US');
   assert.equal(order.payType, 2);
-  assert.match(order.orderNumber, /^LS-/);
+  assert.match(order.orderNumber, /^SL-/);
   const m = world.sessions[0].payment_intent.metadata;
   assert.equal(m.fulfillment_status, 'ordered');
   assert.equal(m.cj_order_id, 'CJ1');
@@ -39,15 +41,15 @@ test('pedido reembolsado antes de enviar → se omite', async () => {
   assert.equal(Object.keys(world.cjOrders).length, 1);
 });
 
-test('Canarias → revisión manual, no se envía a CJ', async () => {
-  world.sessions.push(makeSession({ id: 'c3', zip: '35001' }));
+test('dirección sin estado → usa la ciudad como provincia (CJ la exige)', async () => {
+  world.sessions.push(makeSession({ id: 'c3', state: '' }));
   await fulfill.run();
-  assert.equal(world.sessions[2].payment_intent.metadata.fulfillment_status, 'manual');
-  assert.equal(Object.keys(world.cjOrders).length, 1);
+  const o = Object.values(world.cjOrders).find(x => x.remark.includes('pi_c3'));
+  assert.equal(o.shippingProvince, 'San Francisco');
 });
 
 test('error en CJ → reintenta y tras 3 intentos alerta por email', async () => {
-  world.sessions.push(makeSession({ id: 'd4', color: 'grafito' }));
+  world.sessions.push(makeSession({ id: 'd4' }));
   world.cjFail = 'Insufficient balance';
   world.emails = [];
   for (let i = 0; i < 4; i++) await fulfill.run();
@@ -61,7 +63,7 @@ test('error en CJ → reintenta y tras 3 intentos alerta por email', async () =>
 test('ejecución interrumpida (processing) → se reconcilia con CJ sin duplicar', async () => {
   const s = makeSession({ id: 'e5' });
   world.sessions.push(s);
-  world.cjOrders['CJ99'] = { orderId: 'CJ99', orderNumber: 'LS-' + s.payment_intent.id.replace(/^pi_/, ''), orderStatus: 'UNSHIPPED' };
+  world.cjOrders['CJ99'] = { orderId: 'CJ99', orderNumber: 'SL-' + s.payment_intent.id.replace(/^pi_/, ''), orderStatus: 'UNSHIPPED' };
   s.payment_intent.metadata.fulfillment_status = 'processing';
   const n = Object.keys(world.cjOrders).length;
   const st = await fulfill.run();

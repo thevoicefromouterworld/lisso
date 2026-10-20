@@ -7,13 +7,14 @@ import { requireEnv, log, summary, DRY } from './lib/util.mjs';
 requireEnv('STRIPE_SECRET_KEY');
 const cfg = loadConfig();
 const url = siteUrl(cfg);
+const CUR = (cfg.brand.currency || 'USD').toLowerCase();
 const live = process.env.STRIPE_SECRET_KEY.startsWith('sk_live') || process.env.STRIPE_SECRET_KEY.startsWith('rk_live');
 log(`Modo Stripe: ${live ? 'LIVE' : 'TEST'} · web: ${url}`);
 
 // 1) Producto
 const products = await listAll('/v1/products', { active: true });
 let product = products.find(p => p.metadata?.lisso === 'product');
-const productParams = { name: cfg.brand.productName, description: 'Quitapelusas eléctrico recargable por USB-C.', metadata: { lisso: 'product' }, images: [`${url}/assets/img/og.png`] };
+const productParams = { name: cfg.brand.productName, description: 'DIY snowy street night light kit.', metadata: { lisso: 'product' }, images: [`${url}/assets/img/og.png`] };
 product = product
   ? await stripe('POST', `/v1/products/${product.id}`, { name: productParams.name, description: productParams.description })
   : await stripe('POST', '/v1/products', productParams);
@@ -22,12 +23,12 @@ log(`Producto: ${product.id}`);
 // 2) Precios (uno por pack, IVA incluido)
 const prices = {};
 for (const b of cfg.bundles) {
-  const lookup = `lisso_${b.id}`;
+  const lookup = `store_${CUR}_${b.id}`;
   const amount = Math.round(b.price * 100);
   const found = (await stripe('GET', '/v1/prices', { lookup_keys: [lookup], active: true })).data[0];
-  if (found && found.unit_amount === amount && found.product === product.id) { prices[b.id] = found; continue; }
+  if (found && found.unit_amount === amount && found.product === product.id && found.currency === CUR) { prices[b.id] = found; continue; }
   prices[b.id] = await stripe('POST', '/v1/prices', {
-    product: product.id, currency: 'eur', unit_amount: amount, tax_behavior: 'inclusive',
+    product: product.id, currency: CUR, unit_amount: amount, tax_behavior: 'exclusive',
     nickname: b.label, lookup_key: lookup, transfer_lookup_key: true, metadata: { pack: b.id, qty: b.qty }
   });
   log(`Precio ${b.id}: ${b.price} € (${prices[b.id].id})`);
@@ -35,9 +36,9 @@ for (const b of cfg.bundles) {
 
 // 3) Tarifa de envío gratuita
 const rates = await listAll('/v1/shipping_rates', { active: true });
-let rate = rates.find(r => r.metadata?.lisso === 'free');
+let rate = rates.find(r => r.metadata?.lisso === 'free' && r.fixed_amount?.currency === CUR);
 if (!rate) rate = await stripe('POST', '/v1/shipping_rates', {
-  display_name: cfg.shipping.label, type: 'fixed_amount', fixed_amount: { amount: 0, currency: 'eur' }, tax_behavior: 'inclusive',
+  display_name: cfg.shipping.label, type: 'fixed_amount', fixed_amount: { amount: 0, currency: CUR }, tax_behavior: 'exclusive',
   delivery_estimate: { minimum: { unit: 'business_day', value: cfg.shipping.minDays }, maximum: { unit: 'business_day', value: cfg.shipping.maxDays } },
   metadata: { lisso: 'free' }
 });
@@ -47,7 +48,7 @@ const links = await listAll('/v1/payment_links', { active: true });
 const out = {}, ids = {};
 for (const b of cfg.bundles) for (const v of cfg.variants) {
   const key = `${b.id}:${v.id}`;
-  const redirect = `${url}/gracias.html?pack=${b.id}&color=${v.id}&session_id={CHECKOUT_SESSION_ID}`;
+  const redirect = `${url}/thank-you.html?pack=${b.id}&color=${v.id}&session_id={CHECKOUT_SESSION_ID}`;
   const meta = { lisso_key: key, pack: b.id, color: v.id, qty: String(b.qty) };
   const existing = links.find(l => l.metadata?.lisso_key === key);
   const fresh = existing && existing.metadata?.price_id === prices[b.id].id && existing.after_completion?.redirect?.url === redirect;
@@ -64,12 +65,17 @@ for (const b of cfg.bundles) for (const v of cfg.variants) {
     billing_address_collection: 'auto',
     customer_creation: 'if_required',
     submit_type: 'pay',
-    custom_text: { submit: { message: `Envío gratis · ${cfg.shipping.returnDays} días para probarlo · Color: ${v.name}` } },
+    custom_text: { submit: { message: `${cfg.shipping.label} · ${cfg.shipping.returnDays}-day money-back guarantee` } },
     metadata: { ...meta, price_id: prices[b.id].id },
     payment_intent_data: { metadata: meta, description: `${cfg.brand.productName} · ${b.label} · ${v.name}` }
   });
   out[key] = link.url; ids[key] = link.id;
   log(`Link ${key}: creado`);
+}
+
+// Desactivar links antiguos que ya no corresponden a ningún pack/variante actual
+for (const l of links) {
+  if (l.metadata?.lisso_key && !(l.metadata.lisso_key in out) && !DRY) { await stripe('POST', `/v1/payment_links/${l.id}`, { active: false }); log(`Link antiguo desactivado: ${l.metadata.lisso_key}`); }
 }
 
 if (!DRY) {

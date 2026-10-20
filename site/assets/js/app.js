@@ -1,72 +1,82 @@
-/* Lisso storefront — vanilla JS, sin dependencias */
+/* Snowlit storefront — vanilla JS, sin dependencias */
 (() => {
   'use strict';
   const S = window.STORE || {};
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const fmt = n => new Intl.NumberFormat('es-ES', { style: 'currency', currency: S.brand?.currency || 'EUR' }).format(n);
+  const fmt = n => new Intl.NumberFormat(S.brand?.locale || 'en-US', { style: 'currency', currency: S.brand?.currency || 'USD' }).format(n);
   const store = {
-    get(k) { try { return JSON.parse(localStorage.getItem('lisso_' + k)); } catch { return null; } },
-    set(k, v) { try { localStorage.setItem('lisso_' + k, JSON.stringify(v)); } catch {} }
+    get(k) { try { return JSON.parse(localStorage.getItem('snowlit_' + k)); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem('snowlit_' + k, JSON.stringify(v)); } catch {} }
   };
 
-  /* ---------- Render del producto (SVG propio) ---------- */
+  /* ---------- Ilustraciones propias (SVG) ---------- */
+  function rng(seed) { let x = seed; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
+  function flakes(n, x0, y0, w, h, seed, cls = 'flake') {
+    const r = rng(seed); let out = '';
+    for (let i = 0; i < n; i++) {
+      const x = x0 + r() * w, y = y0 + r() * h, rad = .6 + r() * 1.6, o = .45 + r() * .55;
+      out += `<circle class="${cls}${i % 5 === 0 ? ' twinkle' : ''}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rad.toFixed(2)}" fill="#fff" fill-opacity="${o.toFixed(2)}" style="animation-delay:${(-r() * 3).toFixed(2)}s"/>`;
+    }
+    return out;
+  }
   let uid = 0;
-  function deviceSVG(v) {
-    const id = 'd' + (++uid);
-    const dark = v.id === 'grafito';
+  /** El producto: caja transparente con farola y nieve */
+  function productSVG(on = true) {
+    const id = 's' + (++uid);
     return `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 <defs>
-  <linearGradient id="${id}b" x1="0" x2="1"><stop offset="0" stop-color="${v.accent}"/><stop offset=".28" stop-color="${v.hex}"/><stop offset=".62" stop-color="${v.hex}"/><stop offset="1" stop-color="${v.accent}"/></linearGradient>
-  <radialGradient id="${id}h" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="${dark ? '#5a585c' : '#fff'}"/><stop offset=".55" stop-color="${v.hex}"/><stop offset="1" stop-color="${v.accent}"/></radialGradient>
-  <radialGradient id="${id}m" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#F4F4F2"/><stop offset=".6" stop-color="#BDBDBA"/><stop offset="1" stop-color="#8C8C89"/></radialGradient>
-  <pattern id="${id}p" width="10" height="17.32" patternUnits="userSpaceOnUse"><circle cx="5" cy="4.33" r="2.6" fill="#55554F" opacity=".72"/><circle cx="0" cy="12.99" r="2.6" fill="#55554F" opacity=".72"/><circle cx="10" cy="12.99" r="2.6" fill="#55554F" opacity=".72"/></pattern>
-  <clipPath id="${id}c"><circle cx="150" cy="128" r="74"/></clipPath>
-  <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <radialGradient id="${id}g" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFE2A8" stop-opacity=".95"/><stop offset=".35" stop-color="#FFC877" stop-opacity=".45"/><stop offset="1" stop-color="#FFB45C" stop-opacity="0"/></radialGradient>
+  <linearGradient id="${id}c" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".12" stop-color="#fff" stop-opacity=".04"/><stop offset=".9" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".14"/></linearGradient>
+  <linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F7FC"/><stop offset="1" stop-color="#C9D3E4"/></linearGradient>
+  <clipPath id="${id}k"><rect x="52" y="34" width="196" height="326" rx="8"/></clipPath>
 </defs>
-<rect x="98" y="168" width="104" height="214" rx="52" fill="url(#${id}b)"/>
-<rect x="110" y="190" width="14" height="160" rx="7" fill="url(#${id}g)" opacity="${dark ? .25 : .7}"/>
-<circle cx="150" cy="128" r="112" fill="url(#${id}h)"/>
-<circle cx="150" cy="128" r="112" fill="none" stroke="${v.accent}" stroke-opacity=".5"/>
-<circle cx="150" cy="128" r="96" fill="#fff" fill-opacity="${dark ? .12 : .45}" stroke="#fff" stroke-opacity=".8" stroke-width="1.5"/>
-<g fill="#A49C92" opacity=".55">
-  <circle cx="72" cy="120" r="5"/><circle cx="80" cy="96" r="3.5"/><circle cx="226" cy="140" r="4.5"/><circle cx="214" cy="178" r="3.5"/><circle cx="100" cy="190" r="4"/><circle cx="196" cy="70" r="3"/>
+<ellipse cx="150" cy="372" rx="120" ry="10" fill="#000" opacity=".55"/>
+<g clip-path="url(#${id}k)">
+  <rect x="52" y="34" width="196" height="326" fill="#0A0F1E"/>
+  ${on ? `<circle cx="168" cy="132" r="120" fill="url(#${id}g)" class="lamp-glow"/>` : ''}
+  <path d="M112 352 V140 q0 -26 26 -26 h34" fill="none" stroke="#2A3142" stroke-width="5" stroke-linecap="round"/>
+  <path d="M112 352 V140 q0 -26 26 -26 h34" fill="none" stroke="#5A6680" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>
+  <rect x="104" y="250" width="16" height="22" rx="2" fill="#2A3142"/><rect x="107" y="253" width="10" height="7" fill="#46516A"/>
+  <path d="M160 114 h26 l-4 9 h-18z" fill="#2A3142"/>
+  <ellipse cx="173" cy="124" rx="9" ry="3.2" fill="${on ? '#FFF4D6' : '#6B7489'}"/>
+  ${on ? `<path d="M164 124 L130 300 L220 300 L182 124Z" fill="#FFD58A" fill-opacity=".08" class="lamp-light"/>` : ''}
+  ${flakes(260, 56, 40, 188, 300, 7)}
+  <path d="M52 336 q30 -10 58 -4 t60 -2 t78 4 V360 H52z" fill="url(#${id}s)"/>
+  ${flakes(40, 56, 330, 188, 28, 11)}
 </g>
-<circle cx="150" cy="128" r="78" fill="url(#${id}m)"/>
-<g clip-path="url(#${id}c)"><rect x="70" y="50" width="160" height="160" fill="url(#${id}p)"/></g>
-<circle cx="150" cy="128" r="78" fill="none" stroke="#7d7d79" stroke-width="2"/>
-<circle cx="150" cy="128" r="12" fill="#E9E9E6" stroke="#8C8C89"/>
-<ellipse cx="118" cy="82" rx="40" ry="16" fill="#fff" opacity=".35" transform="rotate(-28 118 82)"/>
-<circle cx="150" cy="262" r="19" fill="${dark ? '#2a292b' : '#fff'}" stroke="${v.accent}" stroke-width="2"/>
-<circle cx="150" cy="262" r="11" fill="none" stroke="#7BC4A1" stroke-width="2.5" opacity=".9"/>
-<path d="M150 254v8" stroke="#7BC4A1" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="138" y="368" width="24" height="7" rx="3.5" fill="#1C1A17" opacity=".75"/>
+<rect x="52" y="34" width="196" height="326" rx="8" fill="url(#${id}c)" stroke="#C7D3EA" stroke-opacity=".55" stroke-width="2"/>
+<rect x="52" y="34" width="196" height="10" rx="5" fill="#fff" opacity=".18"/>
+<rect x="40" y="186" width="14" height="38" rx="3" fill="#E9EDF4"/><rect x="43" y="196" width="6" height="10" rx="1.5" fill="#B9C2D2"/>
+</svg>`;
+  }
+  /** Escena de habitación a oscuras para la sección interactiva */
+  function roomSVG() {
+    const id = 'r' + (++uid);
+    return `<svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <radialGradient id="${id}w" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFC877" stop-opacity=".5"/><stop offset=".5" stop-color="#FF9F45" stop-opacity=".12"/><stop offset="1" stop-color="#FF9F45" stop-opacity="0"/></radialGradient>
+  <linearGradient id="${id}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A1410"/><stop offset="1" stop-color="#0B0806"/></linearGradient>
+</defs>
+<rect width="500" height="400" fill="#070A14"/>
+<rect x="300" y="40" width="150" height="170" rx="4" fill="#0B1226" stroke="#141C33" stroke-width="6"/>
+<path d="M375 40v170M300 125h150" stroke="#141C33" stroke-width="5"/>
+${flakes(70, 304, 44, 142, 162, 23, 'outside')}
+<ellipse cx="190" cy="230" rx="230" ry="190" fill="url(#${id}w)" class="wall-glow"/>
+<rect x="0" y="300" width="500" height="100" fill="url(#${id}d)"/>
+<rect x="0" y="298" width="500" height="4" fill="#3A2C1E" class="wall-glow"/>
+<rect x="40" y="262" width="54" height="38" rx="4" fill="#141A2A"/><rect x="46" y="250" width="46" height="14" rx="3" fill="#1C2338"/>
+<path d="M410 300 v-26 q0 -14 14 -14 h10 q14 0 14 14 v26" fill="#121827"/>
+<g transform="translate(130 136) scale(.42)">${productSVG(true)}</g>
+<ellipse cx="193" cy="304" rx="70" ry="8" fill="#FFC877" fill-opacity=".22" class="wall-glow"/>
 </svg>`;
   }
 
-  /* ---------- Texturas antes/después ---------- */
-  const svgURI = s => `url("data:image/svg+xml,${encodeURIComponent(s)}")`;
-  function setTextures() {
-    const knit = `<svg xmlns='http://www.w3.org/2000/svg' width='44' height='52'><g fill='none' stroke-linecap='round' stroke-width='9'><path d='M5 4 L22 26' stroke='#A75A47'/><path d='M39 4 L22 26' stroke='#9B5140'/><path d='M5 30 L22 52' stroke='#A75A47'/><path d='M39 30 L22 52' stroke='#9B5140'/></g><g fill='none' stroke='#C67A64' stroke-width='2' opacity='.55'><path d='M8 7 L20 22'/><path d='M8 33 L20 48'/></g></svg>`;
-    let pills = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><defs><radialGradient id='g'><stop offset='0' stop-color='#E6C3B5'/><stop offset='.6' stop-color='#C99583'/><stop offset='1' stop-color='#B57D6A' stop-opacity='0'/></radialGradient></defs>`;
-    const pts = [[22,30,9],[70,18,7],[120,40,11],[180,22,8],[200,80,10],[150,96,7],[96,88,12],[40,104,8],[20,160,10],[76,150,7],[130,170,11],[190,150,9],[170,204,7],[60,206,9],[110,128,6],[206,196,6]];
-    pts.forEach(([x, y, r]) => { pills += `<circle cx='${x}' cy='${y}' r='${r}' fill='url(#g)'/><circle cx='${x - r / 3}' cy='${y - r / 3}' r='${r / 3}' fill='#F2DCD2' opacity='.6'/>`; });
-    pills += '</svg>';
-    let fuzz = `<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><g stroke='#D9AE9C' stroke-width='1.2' opacity='.55' fill='none' stroke-linecap='round'>`;
-    for (let i = 0; i < 70; i++) { const x = (i * 37) % 160, y = (i * 61) % 160, a = (i * 47) % 360 * Math.PI / 180; fuzz += `<path d='M${x} ${y} q ${6 * Math.cos(a)} ${6 * Math.sin(a)} ${10 * Math.cos(a + .6)} ${10 * Math.sin(a + .6)}'/>`; }
-    fuzz += '</g></svg>';
-    const el = $('#compare');
-    if (!el) return;
-    el.style.setProperty('--knit', svgURI(knit));
-    el.style.setProperty('--pills', svgURI(pills));
-    el.style.setProperty('--fuzz', svgURI(fuzz));
-  }
-
   const ART = {
-    sweater: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M44 10 L28 16 L10 40 L20 50 L30 40 L30 82 L90 82 L90 40 L100 50 L110 40 L92 16 L76 10 Q60 22 44 10Z"/><path d="M30 74h60M38 30v6M60 34v6M82 30v6M48 50v6M72 50v6" opacity=".5"/></svg>',
-    coat: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M46 6 L30 12 L18 50 L26 84 L58 84 L58 30 L46 6Z M74 6 L90 12 L102 50 L94 84 L62 84 L62 30 L74 6Z"/><circle cx="66" cy="44" r="1.8"/><circle cx="66" cy="58" r="1.8"/><circle cx="66" cy="72" r="1.8"/><path d="M34 60h14M72 60h14" opacity=".5"/></svg>',
-    sofa: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M22 52 V30 Q22 22 30 22 H90 Q98 22 98 30 V52"/><path d="M10 50 Q10 42 18 42 Q26 42 26 50 V62 H94 V50 Q94 42 102 42 Q110 42 110 50 V72 H10Z"/><path d="M60 26v34M18 72v8M102 72v8" opacity=".6"/></svg>',
-    blanket: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M14 22 H98 Q106 22 106 30 V58 Q106 66 98 66 H22"/><path d="M14 22 V66 Q14 74 22 74 H98" /><path d="M22 66 Q14 66 14 58"/><path d="M30 34h56M30 44h56M30 54h40" opacity=".45"/><path d="M98 74v6M88 74v6M78 74v6M68 74v6" opacity=".6"/></svg>'
+    bed: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M10 70V40M10 58h100v12M110 70V52q0-8-8-8H46v14"/><rect x="18" y="46" width="22" height="12" rx="5"/><rect x="70" y="18" width="18" height="24" rx="3"/><path d="M79 26v10" opacity=".6"/></svg>',
+    desk: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M8 62h104M18 62v20M102 62v20"/><rect x="22" y="22" width="44" height="30" rx="3"/><path d="M44 52v10"/><rect x="80" y="34" width="16" height="28" rx="2"/><path d="M84 58V42q0-4 4-4h3" opacity=".7"/></svg>',
+    gift: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><rect x="30" y="34" width="60" height="46" rx="3"/><rect x="26" y="24" width="68" height="12" rx="2"/><path d="M60 24v56"/><path d="M60 24c-6-12-22-12-20-2 2 6 14 4 20 2zM60 24c6-12 22-12 20-2-2 6-14 4-20 2z"/></svg>',
+    diy: '<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M30 76c0-14 8-22 18-22s18 8 18 22M54 76c0-14 8-22 18-22s18 8 18 22"/><circle cx="48" cy="36" r="10"/><circle cx="72" cy="36" r="10"/><path d="M58 18c2-4 6-4 4 0 4-4 6 0 2 2" opacity=".7"/></svg>'
   };
 
   /* ---------- Estado ---------- */
@@ -124,7 +134,6 @@
     try { window.ttq && ttq.track(m.tt || name, { ...data, content_type: 'product', event_id: opts.eventID }); } catch {}
     try { window.gtag && gtag('event', m.ga || name, { currency: data.currency, value: data.value, transaction_id: opts.eventID }); } catch {}
   }
-  window.LissoTrack = fire;
 
   function initConsent() {
     const box = $('#consent');
@@ -140,16 +149,41 @@
   }
 
   /* ---------- UI ---------- */
+  const CUR = S.brand?.currency || 'USD';
+  const media = () => ['hero', 'detail', 'lifestyle'].map(k => ({ k, src: `assets/media/${k}.jpg` }));
+  const gallery = { idx: 0, items: [] };
+
   function renderSwatches() {
-    const wrap = $('#swatches'); if (!wrap) return;
+    const field = $('#colorField'), wrap = $('#swatches');
+    if (field && variants.length < 2) { field.hidden = true; return; }
+    if (!wrap) return;
     wrap.setAttribute('role', 'radiogroup');
-    wrap.innerHTML = variants.map(v => `<button type="button" class="swatch${state.out.has(v.id) ? ' is-out' : ''}" role="radio" style="--c:${v.hex}" aria-label="${v.name}${state.out.has(v.id) ? ' (agotado)' : ''}" aria-checked="${v.id === state.color}" data-color="${v.id}"></button>`).join('');
+    wrap.innerHTML = variants.map(v => `<button type="button" class="swatch${state.out.has(v.id) ? ' is-out' : ''}" role="radio" style="--c:${v.hex}" aria-label="${v.name}${state.out.has(v.id) ? ' (sold out)' : ''}" aria-checked="${v.id === state.color}" data-color="${v.id}"></button>`).join('');
     $$('.swatch', wrap).forEach(b => b.addEventListener('click', () => setColor(b.dataset.color)));
+  }
+  /** Galería: ilustración propia + fotos reales del producto si existen (las descarga el build) */
+  async function initGallery() {
+    const ok = src => new Promise(res => { const im = new Image(); im.onload = () => res(im.naturalWidth > 50); im.onerror = () => res(false); im.src = src; });
+    const photos = [];
+    for (const m of media()) if (await ok(m.src)) photos.push(m);
+    gallery.items = [...photos.slice(0, 1), { k: 'art' }, ...photos.slice(1)];
+    if (!photos.length) gallery.items = [{ k: 'art' }];
     const thumbs = $('#thumbs');
-    if (thumbs) {
-      thumbs.innerHTML = variants.map(v => `<button type="button" class="thumb" role="tab" aria-selected="${v.id === state.color}" aria-label="Ver color ${v.name}" data-color="${v.id}">${deviceSVG(v)}</button>`).join('');
-      $$('.thumb', thumbs).forEach(b => b.addEventListener('click', () => setColor(b.dataset.color)));
+    if (thumbs && gallery.items.length > 1) {
+      thumbs.innerHTML = gallery.items.map((m, i) => `<button type="button" class="thumb" role="tab" aria-selected="${i === 0}" aria-label="Image ${i + 1}" data-i="${i}">${m.k === 'art' ? productSVG() : `<img src="${m.src}" alt="">`}</button>`).join('');
+      $$('.thumb', thumbs).forEach(b => b.addEventListener('click', () => showSlide(+b.dataset.i)));
     }
+    const detail = photos.find(p => p.k === 'detail'), life = photos.find(p => p.k === 'lifestyle');
+    if (detail && life) { $('#photoDetail').src = detail.src; $('#photoLifestyle').src = life.src; $('#photos').hidden = false; }
+    showSlide(0);
+  }
+  function showSlide(i) {
+    gallery.idx = i;
+    const m = gallery.items[i] || { k: 'art' };
+    const scene = $('#heroScene'), photo = $('#heroPhoto'), stage = $('#stage');
+    if (m.k === 'art') { scene.innerHTML = productSVG(); scene.hidden = false; photo.hidden = true; stage.classList.remove('is-photo'); }
+    else { photo.src = m.src; photo.alt = `${S.brand?.productName} photo`; photo.hidden = false; scene.hidden = true; stage.classList.add('is-photo'); }
+    $$('.thumb').forEach(t => t.setAttribute('aria-selected', String(+t.dataset.i === i)));
   }
   function renderBundles() {
     const wrap = $('#bundles'); if (!wrap) return;
@@ -159,7 +193,7 @@
       return `<button type="button" class="bundle" role="radio" aria-checked="${b.id === state.pack}" data-pack="${b.id}">
         ${b.badge ? `<span class="bundle__badge${b.qty === 3 ? ' bundle__badge--alt' : ''}">${b.badge}</span>` : ''}
         <span class="bundle__radio" aria-hidden="true"></span>
-        <span><span class="bundle__name">${b.label}</span><span class="bundle__sub">${b.qty > 1 ? fmt(unit) + ' / unidad' : 'Prueba individual'}</span></span>
+        <span><span class="bundle__name">${b.label}</span><span class="bundle__sub">${b.qty > 1 ? fmt(unit) + ' each' : 'Just for you'}</span></span>
         <span class="bundle__price">${fmt(b.price)}${b.compareAt ? `<s>${fmt(b.compareAt)}</s>` : ''}</span>
       </button>`;
     }).join('');
@@ -169,41 +203,33 @@
     const dl = $('#specs'); if (!dl || !S.specs) return;
     dl.innerHTML = S.specs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
   }
-  function renderDevice() {
-    const v = V(); if (!v) return;
-    const hero = $('#heroDevice');
-    if (hero) hero.innerHTML = deviceSVG(v);
-    const photo = $('#heroPhoto');
-    if (photo && v.photo) { photo.src = v.photo; photo.alt = 'Quitapelusas Lisso color ' + v.name; photo.hidden = false; } else if (photo) photo.hidden = true;
-  }
   function update() {
     const v = V(), b = B(); if (!v || !b) return;
     $('#colorName') && ($('#colorName').textContent = v.name);
     $('#priceNow').textContent = fmt(b.price);
     const was = $('#priceWas'), save = $('#priceSave');
-    if (b.compareAt) { was.textContent = fmt(b.compareAt); was.hidden = false; save.textContent = 'Ahorras ' + Math.round((1 - b.price / b.compareAt) * 100) + '% vs. sueltos'; save.hidden = false; }
+    if (b.compareAt) { was.textContent = fmt(b.compareAt); was.hidden = false; save.textContent = 'Save ' + Math.round((1 - b.price / b.compareAt) * 100) + '% vs. singles'; save.hidden = false; }
     else { was.hidden = true; save.hidden = true; }
-    $('#priceUnit').textContent = (b.qty > 1 ? fmt(b.price / b.qty) + ' por unidad · ' : '') + 'IVA incluido · Envío gratis';
-    $('#buyLabel').textContent = state.out.has(v.id) ? 'Agotado en ' + v.name : `Comprar ${b.label.toLowerCase()} · ${fmt(b.price)}`;
-    $('#buyBtn').disabled = state.out.has(v.id);
+    $('#priceUnit').textContent = (b.qty > 1 ? fmt(b.price / b.qty) + ' each · ' : '') + 'Free US shipping';
+    const out = state.out.has(v.id);
+    $('#buyLabel').textContent = out ? 'Sold out — back soon' : `Buy ${b.qty > 1 ? b.qty + '-pack' : 'now'} · ${fmt(b.price)}`;
+    $('#buyBtn').disabled = out;
     $('#stickyPrice').textContent = fmt(b.price);
-    $('#stickyLabel').textContent = `${b.label} · ${v.name}`;
+    $('#stickyLabel').textContent = b.label;
     $$('.swatch').forEach(s => s.setAttribute('aria-checked', s.dataset.color === v.id));
-    $$('.thumb').forEach(s => s.setAttribute('aria-selected', s.dataset.color === v.id));
     $$('.bundle').forEach(s => s.setAttribute('aria-checked', s.dataset.pack === b.id));
-    const url = new URL(location.href); url.searchParams.set('color', v.id); url.searchParams.set('pack', b.id);
+    const url = new URL(location.href); url.searchParams.set('pack', b.id); if (variants.length > 1) url.searchParams.set('color', v.id);
     history.replaceState(null, '', url);
   }
-  function setColor(id) { state.color = id; renderDevice(); update(); }
+  function setColor(id) { state.color = id; update(); }
   function setPack(id) { state.pack = id; update(); }
 
   /* ---------- Checkout ---------- */
   function checkoutURL() {
-    const key = `${state.pack}:${state.color}`;
-    const base = (S.paymentLinks || {})[key];
+    const base = (S.paymentLinks || {})[`${state.pack}:${state.color}`];
     if (!base) return null;
     const u = new URL(base);
-    u.searchParams.set('locale', 'es');
+    u.searchParams.set('locale', (S.brand?.locale || 'en').slice(0, 2));
     const vid = (store.get('vid') || '').replace(/[^a-zA-Z0-9_-]/g, '');
     if (vid) u.searchParams.set('client_reference_id', vid);
     const promo = store.get('promo');
@@ -214,36 +240,22 @@
     const btn = e.currentTarget;
     const b = B(), v = V();
     const url = checkoutURL();
-    const data = { value: b.price, currency: 'EUR', content_ids: [`${b.id}-${v.id}`], content_name: S.brand?.productName, num_items: b.qty };
+    const data = { value: b.price, currency: CUR, content_ids: [`${b.id}-${v.id}`], content_name: S.brand?.productName, num_items: b.qty };
     fire('AddToCart', data); fire('InitiateCheckout', data);
-    if (!url) {
-      alert('La tienda se está configurando. Vuelve en unos minutos.');
-      return;
-    }
+    if (!url) { alert('Our store is being set up. Please check back in a few minutes.'); return; }
     btn.classList.add('is-loading');
     store.set('last', { pack: b.id, color: v.id, value: b.price, ts: Date.now() });
     setTimeout(() => { location.href = url; }, 120);
   }
 
-  /* ---------- Antes/después ---------- */
-  function initCompare() {
-    const el = $('#compare'); if (!el) return;
-    const r = $('.compare__range', el);
-    r.addEventListener('input', () => el.style.setProperty('--pos', r.value + '%'));
-    // pequeña animación de invitación
-    let played = false;
-    new IntersectionObserver(([en], o) => {
-      if (!en.isIntersecting || played) return; played = true; o.disconnect();
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const seq = [50, 78, 22, 50]; let i = 0;
-      const step = () => { if (i >= seq.length) return; const to = seq[i++]; animate(+r.value, to, 650, x => { r.value = x; el.style.setProperty('--pos', x + '%'); }, step); };
-      step();
-    }, { threshold: .6 }).observe(el);
-  }
-  function animate(from, to, ms, cb, done) {
-    const t0 = performance.now();
-    const tick = t => { const p = Math.min(1, (t - t0) / ms), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; cb(from + (to - from) * e); p < 1 ? requestAnimationFrame(tick) : done && done(); };
-    requestAnimationFrame(tick);
+  /* ---------- Lights on ---------- */
+  function initLights() {
+    const room = $('#room'), sw = $('#lightSwitch'); if (!room || !sw) return;
+    $('#roomScene').innerHTML = roomSVG();
+    const set = on => { room.dataset.on = String(on); sw.setAttribute('aria-checked', String(on)); $('#switchLabel').textContent = on ? 'Switch it off' : 'Switch it on'; };
+    sw.addEventListener('click', () => set(room.dataset.on !== 'true'));
+    room.addEventListener('click', () => set(room.dataset.on !== 'true'));
+    new IntersectionObserver(([en], o) => { if (en.isIntersecting) { setTimeout(() => set(true), 700); o.disconnect(); } }, { threshold: .55 }).observe(room);
   }
 
   /* ---------- Datos dinámicos (stock / reseñas) ---------- */
@@ -253,9 +265,9 @@
       const d = await r.json();
       Object.entries(d.variants || {}).forEach(([id, s]) => { if (s && s.available === false) state.out.add(id); });
       if (state.out.has(state.color)) { const alt = variants.find(v => !state.out.has(v.id)); if (alt) state.color = alt.id; }
-      renderSwatches(); renderDevice(); update();
+      renderSwatches(); update();
       const low = Object.entries(d.variants || {}).find(([id, s]) => id === state.color && s.low);
-      const note = $('#stockNote'); if (note && low) { note.textContent = 'Quedan pocas unidades en este color.'; note.hidden = false; }
+      const note = $('#stockNote'); if (note && low) { note.textContent = 'Low stock in our US warehouse.'; note.hidden = false; }
     } catch {}
   }
   async function loadReviews() {
@@ -264,8 +276,8 @@
       const list = (await r.json()).filter(x => x.verified);
       if (!list.length) return;
       const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-      $('#reviews').innerHTML = list.slice(0, 6).map(x => `<article class="review"><div class="review__stars" aria-label="${x.rating} de 5">${'★'.repeat(x.rating)}${'☆'.repeat(5 - x.rating)}</div><p>${esc(x.text)}</p><small>${esc(x.name)} · Compra verificada</small></article>`).join('');
-      $('#opiniones').hidden = false;
+      $('#reviews').innerHTML = list.slice(0, 6).map(x => `<article class="review"><div class="review__stars" aria-label="${x.rating} out of 5">${'★'.repeat(x.rating)}${'☆'.repeat(5 - x.rating)}</div><p>${esc(x.text)}</p><small>${esc(x.name)} · Verified buyer</small></article>`).join('');
+      $('#reviews-section').hidden = false;
     } catch {}
   }
 
@@ -285,10 +297,16 @@
     }
     $$('[data-support-email]').forEach(a => { a.href = 'mailto:' + S.brand?.supportEmail; a.textContent = S.brand?.supportEmail; });
     $$('[data-year]').forEach(e => e.textContent = new Date().getFullYear());
-    $$('[data-ship-days]').forEach(e => e.textContent = `${S.shipping?.minDays}-${S.shipping?.maxDays}`);
-    const eta = $('#shipEta'); if (eta && S.shipping) eta.textContent = `Llega en ${S.shipping.minDays}-${S.shipping.maxDays} días laborables`;
+    $$('[data-ship-days]').forEach(e => e.textContent = `${S.shipping?.minDays}–${S.shipping?.maxDays}`);
+    // Fecha límite de Navidad: se oculta sola cuando pasa
+    const cut = S.shipping?.christmasCutoff ? new Date(S.shipping.christmasCutoff + 'T23:59:00') : null;
+    if (cut) {
+      const label = cut.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      $$('[data-cutoff]').forEach(e => e.textContent = label);
+      if (Date.now() > cut.getTime()) $$('[data-xmas]').forEach(e => { e.hidden = true; const sep = e.nextElementSibling; if (sep && sep.getAttribute('aria-hidden')) sep.hidden = true; });
+    }
     $$('.use__art').forEach(el => { const k = [...el.classList].find(c => c.startsWith('use__art--'))?.slice(10); if (ART[k]) el.innerHTML = ART[k]; });
-    const els = $$('.section .section__head, .use, .step, .specs-grid > *, .faq, .table-wrap, .compare, .guarantee');
+    const els = $$('.section .section__head, .use, .step, .specs-grid > *, .faq, .table-wrap, .guarantee, .lights > *, .photos > *');
     els.forEach(e => e.classList.add('reveal'));
     const io = new IntersectionObserver(en => en.forEach(x => { if (x.isIntersecting) { x.target.classList.add('is-in'); io.unobserve(x.target); } }), { rootMargin: '0px 0px -8% 0px' });
     els.forEach(e => io.observe(e));
@@ -296,20 +314,21 @@
 
   function initProduct() {
     if (!$('#buyBtn')) return;
-    renderSwatches(); renderBundles(); renderSpecs(); renderDevice(); update();
+    renderSwatches(); renderBundles(); renderSpecs(); update();
+    initGallery();
     $('#buyBtn').addEventListener('click', buy);
     $('#stickyBtn').addEventListener('click', buy);
     const b = B();
-    fire('ViewContent', { value: b.price, currency: 'EUR', content_ids: [`${b.id}-${state.color}`], content_name: S.brand?.productName, content_type: 'product' });
+    fire('ViewContent', { value: b.price, currency: CUR, content_ids: [`${b.id}-${state.color}`], content_name: S.brand?.productName, content_type: 'product' });
     loadStock(); loadReviews();
   }
 
   // duplica el contenido del anuncio para un marquee continuo en móvil
-  const tr = $('.announce__track'); if (tr) tr.innerHTML += '<span class="dup" aria-hidden="true">·</span>' + tr.innerHTML.replace(/<span( aria-hidden="true")?>/g, '<span class="dup" aria-hidden="true">');
-  window.LissoDevice = deviceSVG;
-  setTextures();
+  const tr = $('.announce__track'); if (tr) tr.innerHTML += '<span class="dup" aria-hidden="true">·</span>' + tr.innerHTML.replace(/<span( aria-hidden="true")?( data-xmas(="")?)?>/g, '<span class="dup" aria-hidden="true"$2>');
+  window.SnowlitArt = productSVG;
+  window.SnowlitTrack = fire;
   initChrome();
   initConsent();
   initProduct();
-  initCompare();
+  initLights();
 })();
