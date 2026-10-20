@@ -24,12 +24,36 @@
     }
   ],
   "bundles": [
-    { "id": "pack1", "qty": 1, "label": "1 Snowlit", "price": 24.95, "compareAt": null, "badge": "" },
-    { "id": "pack2", "qty": 2, "label": "2 Snowlits", "price": 34.95, "compareAt": 49.9, "badge": "Most popular", "default": true },
-    { "id": "pack3", "qty": 3, "label": "3 Snowlits · Gift set", "price": 44.95, "compareAt": 74.85, "badge": "Best value" }
+    {
+      "id": "pack1",
+      "qty": 1,
+      "label": "1 Snowlit",
+      "price": 24.95,
+      "compareAt": null,
+      "badge": ""
+    },
+    {
+      "id": "pack2",
+      "qty": 2,
+      "label": "2 Snowlits",
+      "price": 34.95,
+      "compareAt": 49.9,
+      "badge": "Most popular",
+      "default": true
+    },
+    {
+      "id": "pack3",
+      "qty": 3,
+      "label": "3 Snowlits · Gift set",
+      "price": 44.95,
+      "compareAt": 74.85,
+      "badge": "Best value"
+    }
   ],
   "shipping": {
-    "countries": ["US"],
+    "countries": [
+      "US"
+    ],
     "label": "Free US shipping · 3–8 business days",
     "minDays": 3,
     "maxDays": 8,
@@ -44,7 +68,11 @@
   "economics": {
     "currencySymbol": "$",
     "unitCost": 1.65,
-    "shippingCost": { "1": 7.57, "2": 10.49, "3": 12.85 },
+    "shippingCost": {
+      "1": 7.57,
+      "2": 10.49,
+      "3": 12.85
+    },
     "vatRate": 0,
     "paymentFeePct": 0.053,
     "paymentFeeFixed": 0.3
@@ -66,14 +94,42 @@
     "ga4Id": ""
   },
   "reviewsFormUrl": "",
-  "paymentLinks": {},
+  "paymentLinks": {
+    "pack1:classic": "https://buy.stripe.com/test_3cI14m7pv2BS8nZb23gw009",
+    "pack2:classic": "https://buy.stripe.com/test_00w3cu25bccs1ZBeefgw00a",
+    "pack3:classic": "https://buy.stripe.com/test_7sY00icJP0tKcEf7PRgw00b"
+  },
   "specs": [
-    ["What it is", "DIY snowy street-light kit: a clear case, a miniature lamp post and loose \"snow\" you arrange yourself"],
-    ["Light", "Warm LED street lamp with on/off switch (≤5W)"],
-    ["Material", "Clear plastic case"],
-    ["Weight", "About 10 oz (280 g)"],
-    ["Assembly", "Around 20–30 minutes, illustrated tutorial included"],
-    ["In the box", "1 night-light kit + tutorial + gift bag with window"]
+    [
+      "What it is",
+      "DIY snowy street-light kit: a clear case, a miniature lamp post and loose \"snow\" you arrange yourself"
+    ],
+    [
+      "Light",
+      "Warm LED street lamp with on/off switch (≤5W)"
+    ],
+    [
+      "Material",
+      "Clear plastic case"
+    ],
+    [
+      "Weight",
+      "About 10 oz (280 g)"
+    ],
+    [
+      "Assembly",
+      "Around 20–30 minutes, illustrated tutorial included"
+    ],
+    [
+      "In the box",
+      "1 night-light kit + tutorial + gift bag with window"
+    ]
   ],
-  "specsNote": "Verify power source, size and contents with a sample before running ads."
+  "specsNote": "Verify power source, size and contents with a sample before running ads.",
+  "paymentLinkIds": {
+    "pack1:classic": "plink_1USboqCTKZmIFRtCoFipFAnO",
+    "pack2:classic": "plink_1USborCTKZmIFRtCLd8d1yFG",
+    "pack3:classic": "plink_1USborCTKZmIFRtCTiLA2FBd"
+  },
+  "stripeMode": "test"
 }
