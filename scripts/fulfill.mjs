@@ -122,6 +122,8 @@ async function processSession(s) {
 
 export async function run() {
   stats = { checked: 0, ordered: 0, skipped: 0, errors: 0, reconciled: 0 };
+  // Sin producto CJ configurado todavía: no tocar los pedidos (se tramitarán en cuanto se configure)
+  if (!cfg.variants.some(v => v.cjVid)) { summary('⏸ Ningún color tiene `cjVid` en store.config.json: pedidos en espera.'); return stats; }
   const sessions = await paidSessions(Number(process.env.LOOKBACK_DAYS || 14));
   for (const s of sessions.reverse()) await processSession(s);
   summary(`### Fulfilment\n- Revisados: ${stats.checked}\n- Enviados a CJ: ${stats.ordered}\n- Reconciliados: ${stats.reconciled}\n- Omitidos: ${stats.skipped}\n- Errores: ${stats.errors}`);
